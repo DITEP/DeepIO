@@ -6,11 +6,6 @@
 	<li>MongoDB</li>
 </ul>
 
-<h2>MongoDB</h2>
-
-Database name: deepio
-Database admin: deepIoAdmin, 2019/Roussy
-
 <h2>Flask</h2>
 
 cd backend

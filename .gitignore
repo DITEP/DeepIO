@@ -1,0 +1,3 @@
+/venv
+db_config.txt
+backend/models/__pycache__/
