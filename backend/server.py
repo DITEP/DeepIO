@@ -9,6 +9,9 @@ import datetime
 import threading
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import (JWTManager, create_access_token, create_refresh_token,
+                                jwt_required, jwt_refresh_token_required, get_jwt_identity)
+
 from models.userModel import validate_user
 
 class JSONEncoder(json.JSONEncoder):                           
@@ -24,9 +27,11 @@ app = Flask(__name__, static_folder='../frontend/deepio/public/dist', template_f
 CORS(app)
 flask_bcrypt = Bcrypt(app)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/deepio"
+app.config['JWT_SECRET_KEY'] = 'SOOO_SECRET'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 mongo = PyMongo(app)        
 app.json_encoder = JSONEncoder        
-
+jwt = JWTManager(app)
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -49,8 +54,6 @@ def user():
       if not userExists:        
         data['password'] = flask_bcrypt.generate_password_hash(
           data['password'])
-        print('data data data', data)
-        print (mongo.db.users)
         result = mongo.db.users.insert_one(data)
         return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
       else:
@@ -63,105 +66,39 @@ def user():
     data = mongo.db.users.find_one(query)
     return jsonify(data), 200
 
-@app.route('/hello')
+@app.route('/hello', methods=['GET'])
+@jwt_required
 def hello():
-  return getHello()
-  
-def getHello():
   return 'hello'
 
 @app.route('/login', methods=['POST'])
 def auth_user():
   ''' login endpoint '''
   data = validate_user(request.get_json())
-  print('returning user ', data)
   if data['ok']:
     data = data['data']
-    print(data)
     user = mongo.db.users.find_one({'email': data['email']})
     if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
       del user['password']
-      print(user)
+      access_token = create_access_token(identity=data)
+      refresh_token = create_refresh_token(identity=data)
+      user['token'] = access_token
+      user['refresh'] = refresh_token
       return jsonify({'ok': True, 'data': user}), 200
     else:
       return jsonify({'ok': False, 'message': 'invalid username or password'}), 401
   else:
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
-#### La route pour effectuer le calcul de la prediction à l'aide du script 'pred'. En plus du resultat, on retourne également des éléments
-### utiles à la visualisation (attentions et sentebces)
-@app.route('/pred', methods = ['POST'])
-def predict():
-    #if session.get('logged_in'):
-    data = request.get_json()
-    if data['text'] != "":
-        (prediction, sentences,sentence_attentions,word_attentions) = pred([data['text']],app.root_path)
-        res = {}
-        res['result'] = round(float(prediction)*100, 3)
-        #attentions, colors et  sentences sont des listes de liste au cas ou plusieurs textes
-        #sont envoyés à la fonction pred. Ici, comme on envoie qu'un seul text, on récupère toujours
-        #le premier élement de ces listes.
-        res['sentence_attentions'] = sentence_attentions.tolist()[0]
-        res['word_attentions'] = word_attentions.tolist()[0]
-        res['sentences'] = sentences[0]
-        
-        #DB stuff
-        '''
-        #Writing text into database
-        with connection as cursor:
-            insert_text = "INSERT INTO `reports` (`Practitioner`,`NIP`,`Text`,`Result`,`DateCr`,`DateInc`) Values (%s,%s,%s,%s,%s,%s)"
-            cursor.execute(insert_text, (session['id'],data['nip'],data['text'],res['result'],data['dateCr'],data['dateInc']))
-
-
-        #get id of inserted column
-        with connection as cursor:
-            get_id = "SELECT LAST_INSERT_ID();"
-            cursor.execute(get_id)
-            idReport = cursor.fetchone()['LAST_INSERT_ID()']
-
-        #Writing attentions into database
-        attention_thread = threading.Thread(target = insert_attention, args = (connection,idReport,res['sentences'],res['sentence_attentions'],res['word_attentions']))
-        attention_thread.start()
-        '''
-        
-        res['result'] = str(res['result']) + '%'
-        
-        return jsonify(res)
-
-    else:
-        return jsonify("0%")
-
-
-def insert_attention(connection,id,sentences,sentence_attentions,word_attentions):
-    NUM_SENTENCES = len(sentences)
-    NUM_WORDS = len(word_attentions[0])
-    for i in range(NUM_SENTENCES):
-        #Insert sentence attention
-        with connection as cursor:
-            insert_word = 'INSERT INTO attentions (ReportNb,SentenceNb,WordNb,AttentionValue) VALUES (%s,%s,%s,%s)'
-            cursor.execute(insert_word,(id,i,-1,sentence_attentions[i]))
-
-        #Insert word attention for each word in the sentence
-        for j in range(NUM_WORDS):
-            with connection as cursor:
-                insert_word = 'INSERT INTO attentions (ReportNb,SentenceNb,WordNb,AttentionValue) VALUES (%s,%s,%s,%s)'
-                cursor.execute(insert_word,(id,i,j,word_attentions[i][j]))
-
-    return -1
-
-@app.route('/patients', methods = ['GET'])
-def patients():
-    return 'Page under construction'
-    '''
-    if session.get('logged_in'):
-        with connection as cursor:
-            sql = "SELECT * FROM reports WHERE Practitioner = %s"
-            cursor.execute(sql,(session['id']))
-            patients = cursor.fetchall()
-        return render_template('patients.html',patients=patients)
-    else:
-        return redirect(url_for('client_login'))
-    '''
+@app.route('/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    ''' refresh token endpoint '''
+    current_user = get_jwt_identity()
+    ret = {
+            'token': create_access_token(identity=current_user)
+    }
+    return jsonify({'ok': True, 'data': ret}), 200
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)

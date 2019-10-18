@@ -7,8 +7,7 @@ const client = axios.create({
  json: true
 });
 
-class APIClient {
-
+class APIClient {  
   createUser(newUser) { console.log(newUser);
     return this.perform('post', '/user', newUser);
   }
@@ -30,6 +29,9 @@ class APIClient {
       method,
       url: resource,
       data,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }      
     }).then(resp => {
       return resp.data ? resp.data : [];
     })

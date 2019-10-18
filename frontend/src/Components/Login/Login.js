@@ -55,9 +55,12 @@ export default class Login extends React.Component {
       password: this.state.password
     }
     
-    this.apiClient.login(user).then((data) =>
-      this.props.history.push('/')
-    ).catch((err) => {
+    this.apiClient.login(user)
+    .then(res => {
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('refresh', res.data.refresh);  
+      return this.props.history.push('/');
+    }).catch((err) => {
       if (err.response.status === 401) {
         this.setState({
           wrongCredentials: true
