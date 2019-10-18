@@ -10,7 +10,10 @@ export default class Login extends React.Component {
 		super(props);
 		this.state = {
       email: '',
-      password: ''
+      password: '',
+      passwordSecurityError: false,      
+      wrongCredentials: false,
+      otherError: false
     };
     
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -27,8 +30,25 @@ export default class Login extends React.Component {
     });  
   }
   
+  resetIndicators = () => {
+    return this.setState({
+      passwordSecurityError: false,    
+      wrongCredentials: false,
+      otherError: false
+    });
+  }
+  
   onSubmit = (event) => {
     event.preventDefault();
+    
+    this.resetIndicators();
+    
+    if (this.state.password.length < 8) { // Maybe also uppercase and special chars?
+      this.setState({
+        passwordSecurityError: true
+      })
+      return;
+    }    
     
     let user = {
       email: this.state.email,
@@ -36,8 +56,18 @@ export default class Login extends React.Component {
     }
     
     this.apiClient.login(user).then((data) =>
-      console.log('user found', data)
-    );
+      this.props.history.push('/')
+    ).catch((err) => {
+      if (err.response.status === 401) {
+        this.setState({
+          wrongCredentials: true
+        })
+        return;
+      }
+      this.setState({
+        otherError: true
+      })
+    })
   }  
 
 	render () {
@@ -72,6 +102,17 @@ export default class Login extends React.Component {
                   onChange={this.handleInputChange}
                   required
                 />
+                
+                <p className={'login-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
+                  Password not long enough!
+                </p>                
+                <p className={'login-error ' + (this.state.wrongCredentials ? 'show' : 'hidden')}>
+                  Your email address or password is not correct.
+                </p>
+                <p className={'login-error ' + (this.state.otherError ? 'show' : 'hidden')}>
+                  Something went wrong. Please try again later.
+                </p>
+                
               </Form.Group>
               
               <Button variant="primary" type="submit">

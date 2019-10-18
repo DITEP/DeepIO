@@ -35,7 +35,9 @@ export default class Register extends React.Component {
   resetIndicators = () => {
     return this.setState({
       passwordMismatch: false,
-      passwordSecurityError: false
+      passwordSecurityError: false,
+      emailAlreadyUsed: false,
+      otherError: false      
     });
   }
  

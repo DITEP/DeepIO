@@ -1,3 +1,8 @@
 .log-in-form {
   margin-bottom: 25px;
 }
+
+.login-error {
+  margin-top: 20px;
+  color: maroon;
+}
