@@ -1,0 +1,12 @@
+.navbar {
+  max-height: 50px;
+}
+
+#basic-navbar-nav, #profile-navbar-nav {
+  font-size: 13pt;
+}
+
+#profile-navbar-nav .dropdown-menu {
+  right: 0;
+  left: auto;
+}
