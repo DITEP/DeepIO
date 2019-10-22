@@ -1,8 +1,6 @@
 import React from "react";
 import APIClient from '../Actions/apiClient';
 
-var $ = require('jquery');
-
 export default class Home extends React.Component {
 	constructor(props) {
 		super(props);

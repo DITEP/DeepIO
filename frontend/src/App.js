@@ -9,22 +9,35 @@ import Header from './Components/Header/Header';
 import Home from './Components/Home';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
+import Profile from './Components/Profile/Profile';
+import Queue from './Components/Queue/Queue';
+import History from './Components/History/History';
+import Predict from './Components/Predict/Predict';
 
 function App() {
-    return (<Router>
-      <div className="App">
-        <header className="App-header">
-  				<div className='header-contents'>
-            <Header />
-				  </div>
-        </header>
-        
-        <Switch>
-            <Route path="/" exact component={Home} />          
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-          </Switch>
-      </div></Router>
+    return (
+      <Router>
+        <div className="App">
+          <div id='wrapper'>
+            <header className="App-header">
+      				<div className='header-contents'>
+                <Header />
+    				  </div>
+            </header>
+            
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/queue" component={Queue} />
+              <Route path="/predict" component={Predict} />
+              <Route path="/history" component={History} />
+            </Switch>
+            
+          </div>
+        </div>
+      </Router>
     );
   }
 

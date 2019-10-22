@@ -1,3 +1,29 @@
+#top-header {
+  padding-bottom: 20px!important;
+}
+
+#top-header span {
+  float: left;
+  width: 12.5%;
+  height: 4px;
+}
+
+.blue {
+  background-color: #00b5ad;
+}
+
+.yellow {
+  background-color: #b8cb1e;
+}
+
+.orange {
+  background-color: #f26722;
+}
+
+.violet {
+  background-color: #d52f93;
+}
+
 .navbar {
   max-height: 50px;
 }
