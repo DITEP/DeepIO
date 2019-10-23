@@ -59,7 +59,11 @@ export default class Login extends React.Component {
     .then(res => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('refresh', res.data.refresh);
-      return this.props.history.push('/');
+      this.props.history.push({
+        pathname: '/',
+        state: { isLoggedIn: true }
+      })
+      window.location.reload()
     }).catch((err) => {
       if (err.response.status === 401) {
         this.setState({

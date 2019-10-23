@@ -15,26 +15,29 @@ import flag_fr from '../../Static/Images/fr_flag_icon.png';
 import flag_gb from '../../Static/Images/uk_flag_icon.png';
 
 export default class Header extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       userIsLoggedIn: false
     }
-
     this.changeLanguage = this.changeLanguage.bind(this);
     this.logout = this.logout.bind(this);
+    
+    if (window.location.pathname !== '/login') {
+    
+    }
   }
 
-  async componentDidMount() {
-    this.apiClient = new APIClient();
-
+  async componentDidMount() { 
+    this.apiClient = new APIClient(); 
+    
     this.apiClient.getAuth().then((data) =>
       this.setState({
         userIsLoggedIn: true
       })
-    ).catch((err) => {console.log(err);
-      if (err.response.status === 409) {
+    ).catch((err) => {
+      if (err.response.status === 401) {
         return;
       }
     })
@@ -51,11 +54,14 @@ export default class Header extends React.Component {
     }
   }
   
-  logout = () => {
-    this.apiClient.logout()
+  logout = (event) => {
+    this.apiClient.logout();
+    this.setState({
+      userIsLoggedIn: false
+    });
+    return;
   }
   
-
   render() {
     return (
       <div>

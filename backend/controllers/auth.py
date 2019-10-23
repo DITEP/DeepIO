@@ -4,9 +4,8 @@ from application import flask_bcrypt
 from models.userModel import validate_user
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, get_raw_jwt)
-
-from application import jwt
-                              
+import controllers.errors
+ 
 # Try to find user in DB, check password against hash, generate tokens or send back error message
 def authUser():
   data = validate_user(request.get_json())
@@ -61,35 +60,3 @@ def checkIfTokenInBlackList(decrypted_token):
     if token:
       return True
     return False
-
-@jwt.expired_token_loader
-def my_expired_token_callback():
-    return jsonify({
-        'status': 422,
-        'sub_status': 42,
-        'msg': 'The token has expired'
-    }), 401
-
-@jwt.invalid_token_loader
-def handle_invalid_header_error(e):
-    return jsonify({
-        'status': 422,
-        'sub_status': 42,
-        'msg': 'The token has expired'
-    }), 401
-
-@jwt.token_in_blacklist_loader
-def handle_revoked_token_error(e):
-    return jsonify({
-        'status': 422,
-        'sub_status': 42,
-        'msg': 'The token has expired'
-    }), 401
-  
-@jwt.revoked_token_loader
-def handle_revoked_token_error(e):
-    return jsonify({
-        'status': 422,
-        'sub_status': 42,
-        'msg': 'The token has expired'
-    }), 401

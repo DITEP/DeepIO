@@ -16,7 +16,7 @@ class APIClient {
    return this.perform('get', '/user', user);
   }
 
-  login(user) { console.log(user);
+  login(user) {
     return this.perform('post', '/login', user);
   }
  
