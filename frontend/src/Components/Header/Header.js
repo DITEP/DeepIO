@@ -75,33 +75,40 @@ export default class Header extends React.Component {
           <span className="orange"></span>
           <span className="violet"></span>
         </div>
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar  variant="light" expand="lg">
           <Navbar.Brand href="https://www.gustaveroussy.fr/">
           <img
             src={logo}
             className="d-inline-block align-top"
             alt="Gustave Roussy"
           />
-          {'DeepIO'}
           </Navbar.Brand>
+          
+          <Nav className="mr-auto" id="brand-link">
+            <Nav.Link href="/" className="navbar-link"> DeepIO </Nav.Link>
+          </Nav>
+          
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link href="/">Home</Nav.Link>
+              <span className="nav-link-separator">|</span>
               <Nav.Link href="/queue">Prediction Queue</Nav.Link>
+              <span className="nav-link-separator">|</span>
               <Nav.Link href="/predict">New Prediction</Nav.Link>
             </Nav>
           </Navbar.Collapse>
   
-          <NavDropdown title="Languages" id="basic-nav-dropdown" className='mr-auto'>
+          <NavDropdown title="Languages" id="language-selector" className='mr-auto'>
             <NavDropdown.Item id="language-en" onClick={this.changeLanguage}>
               <img
                 src={flag_gb}
                 width="30"
                 height="30"
                 alt="English"
-                className="d-inline-block align-top"
-              />
+                className="d-inline-block align-top language-flag"
+              /> 
+              <p className="language-name">English</p>
             </NavDropdown.Item>
             <NavDropdown.Item id="language-fr" onClick={this.changeLanguage}>
               <img
@@ -109,8 +116,9 @@ export default class Header extends React.Component {
                 alt="French"
                 width="30"
                 height="30"
-                className="d-inline-block align-top"
+                className="d-inline-block align-top language-flag"
               />
+              <p className="language-name">French</p>
             </NavDropdown.Item>
           </NavDropdown>
   

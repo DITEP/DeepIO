@@ -1,11 +1,19 @@
 #top-header {
-  padding-bottom: 20px!important;
+  padding-bottom: 10px!important;
+  background-color: white;
 }
 
 #top-header span {
   float: left;
   width: 12.5%;
   height: 4px;
+}
+
+.navbar {
+  color: black;
+  background-color: white;
+  border-bottom: 2px solid rgba(0,0,0,.5);
+  padding: .5rem 1.3rem 20px 1.3rem;
 }
 
 .blue {
@@ -24,15 +32,64 @@
   background-color: #d52f93;
 }
 
-.navbar {
-  max-height: 50px;
+#brand-link a {
+  font-size: 20pt;
+  font-weight: 500;
+  margin-right: 9vw;
+  color: #544b48;
 }
 
-#basic-navbar-nav, #profile-navbar-nav {
+#brand-link .nav-link:hover {
+  border-bottom: 4px solid transparent !important;
+}
+
+#basic-navbar-nav .nav-link, #profile-navbar-nav .nav-link, #language-selector {
+  color: #544b48;
   font-size: 13pt;
 }
 
 #profile-navbar-nav .dropdown-menu {
   right: 0;
   left: auto;
+}
+
+.nav-link {
+  margin-top: 4px;
+  height: inherit;
+  border-bottom: 4px solid transparent;
+}
+
+.nav-link:hover {
+  border-bottom: 4px solid #c5c5c5 !important;
+  outline: 0; 
+}
+
+#language-fr, #language-en {
+  display: inline-block;
+}
+
+#language-en {
+  margin-top: 4px;
+}
+
+.language-name, .language-flag {
+  float: left;
+}
+
+.language-name {
+  line-height: 30px;
+  margin-left: 5px;
+  margin-bottom: 0px;
+}
+
+.nav-link-separator {
+  vertical-align: middle;
+  font-weight: 200;
+  color: rgba(0, 0, 0, 0.7);
+  -webkit-font-smoothing: antialiased;
+  font-size: 12pt;
+  transform: scale(1, 2);
+  text-align: center;
+  vertical-align: middle;
+  line-height: 45px;
 }
