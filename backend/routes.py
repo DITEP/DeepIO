@@ -26,17 +26,14 @@ def refreshToken():
 @routes.route('/hasAuth', methods=['GET'])
 @jwt_required
 def checkAuth():
-    print('auth? ', request.headers.get('Authorization'))
     token = request.headers.get('Authorization')
     current_user = get_jwt_identity()
-    print('<<< ', current_user)
     return jsonify(logged_in_as=current_user), 200
 
 # Revoke accessToken and put insert it into the blacklist
 @routes.route('/logoutAccessToken', methods=['DELETE'])
 @jwt_required
 def logoutAccessToken():
-    print('getting here')
     return auth.logout()
 
 # Revoke refreshToken and put insert it into the blacklist
@@ -68,10 +65,12 @@ def userControl():
         return user.updateUser()
 
 @routes.route('/changeEmail', methods = ['PUT'])
+@jwt_required
 def changeEmail():
     return user.changeEmail()
 
 @routes.route('/changePassword', methods = ['PUT'])
+@jwt_required
 def changePassword():
     return user.changePassword()
 ###

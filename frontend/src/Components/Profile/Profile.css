@@ -1,0 +1,34 @@
+.profile-settings-box {
+  border: 1px solid rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  border-radius: 4px;
+  color: #544b48;
+}
+
+.change-profile-link {
+  cursor: pointer;
+  border-bottom: 4px solid transparent;
+  margin: 5px 0px 1px 0px;
+  display: inline-block;
+}
+
+.change-profile-link:hover {
+  border-bottom: 4px solid #c5c5c5 !important;
+}
+
+.change-setting-container {
+  margin-top: 40px;
+}
+
+.change-profile-header.active {
+  border-bottom: 1px solid rgba(0,0,0,0.5);
+  padding-bottom: 10px;
+  width: 100%;
+  background-color: rgba(0,0,0,0.1);
+  padding-top: 10px;
+  transition: 0.3s;
+}
+
+.submit-profile-change {
+  margin-bottom: 20px;
+}

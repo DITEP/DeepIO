@@ -11,8 +11,10 @@ export default class Profile extends React.Component {
 		this.state = {
       profile: {},
       email: '',
+      oldPassword: '',
       password: '',
       passwordRepeat: '',
+      oldPasswordWrong: false,
       passwordMismatch: false,
       passwordSecurityError: false,
       emailAlreadyUsed: false,
@@ -97,6 +99,10 @@ export default class Profile extends React.Component {
     event.preventDefault();
     this.resetIndicators();
 
+    if (this.state.oldPassword !== true) { // TODO: Check against password in db, show error or pass
+      console.log('show message');
+    }
+    
     if (this.state.password.length < 8) { // Maybe also uppercase and special chars?
       this.setState({
         passwordSecurityError: true
@@ -104,17 +110,26 @@ export default class Profile extends React.Component {
       return;
     }
 
+    if (this.state.password !== this.state.passwordRepeat) {
+      this.setState({
+        passwordMismatch: true
+      })
+      return;      
+    }
+    
     let user = {
       email: this.state.profile.email,
       password: this.state.password
     }
 
-    this.apiClient.changePassword(user)
+    this.apiClient.changePassword({'password': this.state.password})
     .then(res => {
-        this.seState({
-          passwordChangeSuccess: true
-        })
-      }).catch((err) => {
+      this.apiClient.logout()
+    })
+    .then(res => {
+      this.props.history.push("/login")
+      window.location.reload();
+    }).catch((err) => { console.log(err)
           this.setState({
             otherError: true
           })
@@ -128,69 +143,83 @@ export default class Profile extends React.Component {
       <div className="container">
         <div className="container-fluid">
 
-          <div className="change-profile-header">
-            <p>Your current email: {this.state.profile.email}</p>
-            <a className="change-profile-link" onClick={this.openChangeEmail}>Change email</a>
+          <div className="profile-settings-box"> 
+            <div className={'change-profile-header ' +  (this.state.isEmailOpen ? 'active' : '')}>
+              <a className="change-profile-link" onClick={this.openChangeEmail}>Change email</a>
+            </div>
+            <div className={'change-setting-container ' +  (this.state.isEmailOpen ? 'col' : 'hidden')}>
+              <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitEmail}>
+                <Form.Group controlId="formBasicEmail">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    name='email'
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
+                    required
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit" className="submit-profile-change">
+                  Submit
+                </Button>
+              </Form>
+            </div>
           </div>
-          <div className={this.state.isEmailOpen ? 'col' : 'hidden'}>
-            <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitEmail}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  name='email'
-                  value={this.state.email}
-                  onChange={this.handleInputChange}
-                  required
-                />
-              </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Form>
+          
+          <div className="profile-settings-box"> 
+            <div className={'change-profile-header ' +  (this.state.isPasswordOpen ? 'active' : '')}>
+              <a className="change-profile-link" onClick={this.openChangePassword}>Change password</a>
+            </div>
+            <div className={'change-setting-container ' +  (this.state.isPasswordOpen ? 'col' : 'hidden')}>
+              <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitPassword}>
+                <Form.Group>
+                  <Form.Label>Old Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name='password'
+                    value={this.state.oldPassword}
+                    onChange={this.handleInputChange}
+                  />                
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name='password'
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
+                  />
+                  <Form.Label>Repeat Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name='passwordRepeat'
+                    value={this.state.passwordRepeat}
+                    onChange={this.handleInputChange}
+                    required
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit" className="submit-profile-change">
+                  Submit
+                </Button>
+              </Form>
+            </div>
           </div>
-
-          <div className="change-profile-header">
-            <a className="change-profile-link" onClick={this.openChangePassword}>Change password</a>
-          </div>
-          <div className={this.state.isPasswordOpen ? 'col' : 'hidden'}>
-            <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitPassword}>
-              <Form.Group>
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name='password'
-                  value={this.state.password}
-                  onChange={this.handleInputChange}
-                />
-                <Form.Label>Repeat Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name='passwordRepeat'
-                  value={this.state.passwordRepeat}
-                  onChange={this.handleInputChange}
-                  required
-                />
-              </Form.Group>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Form>
-          </div>
-
+          
           <p className={'password-error ' + (this.state.emailAlreadyUsed ? 'show' : 'hidden')}>
             This email address is already taken.
           </p>
+          <p className={'password-error ' + (this.state.oldPasswordWrong ? 'show' : 'hidden')}>
+            Your old password is wrong.
+          </p>          
           <p className={'password-error ' + (this.state.passwordMismatch ? 'show' : 'hidden')}>
             Passwords must match!
           </p>
           <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
             Password not secure enough!
           </p>
-          <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
+          <p className={'password-error ' + (this.state.otherError ? 'show' : 'hidden')}>
             Your request could not be progressed. Please try again later.
           </p>
 

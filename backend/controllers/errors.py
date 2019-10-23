@@ -10,7 +10,7 @@ def my_expired_token_callback():
     }), 401
 
 @jwt.invalid_token_loader
-def handle_invalid_header_error(e):
+def handle_invalid_header_error():
     return jsonify({
         'status': 422,
         'sub_status': 42,
@@ -18,7 +18,7 @@ def handle_invalid_header_error(e):
     }), 401
 
 @jwt.token_in_blacklist_loader
-def handle_revoked_token_error(e):
+def handle_revoked_token_error():
     return jsonify({
         'status': 422,
         'sub_status': 42,
@@ -26,7 +26,7 @@ def handle_revoked_token_error(e):
     }), 401
   
 @jwt.revoked_token_loader
-def handle_revoked_token_error(e):
+def handle_revoked_token_error():
     return jsonify({
         'status': 422,
         'sub_status': 42,

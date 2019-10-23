@@ -35,6 +35,14 @@ class APIClient {
     })
   }  
 
+  changeEmail() {
+    return this.perform('put', '/changeEmail');  
+  }
+  
+  changePassword(newPassword) {
+    return this.perform('put', '/changePassword', newPassword);
+  }
+
   async perform (method, resource, data) {
     return client({
       method,
