@@ -23,14 +23,21 @@ export default class Header extends React.Component {
     }
 
     this.changeLanguage = this.changeLanguage.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   async componentDidMount() {
     this.apiClient = new APIClient();
 
-    /*this.apiClient.getUser(user).then((data) =>
-      console.log(data)
-    )*/
+    this.apiClient.getAuth().then((data) =>
+      this.setState({
+        userIsLoggedIn: true
+      })
+    ).catch((err) => {console.log(err);
+      if (err.response.status === 409) {
+        return;
+      }
+    })
   }
 
   changeLanguage = (event) => {
@@ -43,6 +50,11 @@ export default class Header extends React.Component {
       console.log('french');
     }
   }
+  
+  logout = () => {
+    this.apiClient.logout()
+  }
+  
 
   render() {
     return (
@@ -96,13 +108,14 @@ export default class Header extends React.Component {
             </NavDropdown.Item>
           </NavDropdown>
   
-          <Navbar.Collapse id="profile-navbar-nav" className={'justify-content-end ' + (this.state.userIsLoggedIn ? 'show' : 'hidden')}>
+          <Navbar.Collapse id="profile-navbar-nav" className='justify-content-end'>
             <Nav >
-              <NavDropdown title="Profile" id="basic-nav-dropdown" className='mr-auto'>
+              <Nav.Link href="/login" className={'mr-auto ' + (this.state.userIsLoggedIn ? 'hidden' : '')}>Login</Nav.Link>
+              <NavDropdown title="Profile" id="basic-nav-dropdown" className={'mr-auto ' + (this.state.userIsLoggedIn ? '' : 'hidden')}>
                 <NavDropdown.Item href="/profile">Show Profile</NavDropdown.Item>
                 <NavDropdown.Item href="/history">Prediction History</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+                <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

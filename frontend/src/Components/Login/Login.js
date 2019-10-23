@@ -58,7 +58,7 @@ export default class Login extends React.Component {
     this.apiClient.login(user)
     .then(res => {
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('refresh', res.data.refresh);  
+      localStorage.setItem('refresh', res.data.refresh);
       return this.props.history.push('/');
     }).catch((err) => {
       if (err.response.status === 401) {

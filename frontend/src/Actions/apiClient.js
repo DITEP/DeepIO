@@ -20,9 +20,20 @@ class APIClient {
     return this.perform('post', '/login', user);
   }
  
+  getAuth() {
+    return this.perform('get', '/hasAuth');
+  }
+  
   getHello() {
     return this.perform('get', '/hello');
   }
+  
+  logout() {
+    this.perform('delete', '/logoutAccessToken').then(() => {
+      localStorage.setItem('token', localStorage.getItem('refresh'));
+      return this.perform('delete', '/logoutRefreshToken');
+    })
+  }  
 
   async perform (method, resource, data) {
     return client({

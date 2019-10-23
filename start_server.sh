@@ -16,7 +16,7 @@ trap hupexit HUP
 trap intexit INT
 
 source venv/bin/activate 
-python3 backend/server.py &
+python3 backend/run.py &
 cd frontend/
 npm start
 
