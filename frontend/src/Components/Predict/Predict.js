@@ -1,11 +1,12 @@
 import React from "react";
+import {withRouter} from 'react-router';
 import './Predict.css';
 import APIClient from '../../Actions/apiClient';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-export default class Predict extends React.Component {
+class Predict extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
@@ -15,6 +16,19 @@ export default class Predict extends React.Component {
 
   async componentDidMount() {
     this.apiClient = new APIClient();
+    
+    this.apiClient.getAuth().then((data) =>
+      console.log(data)
+    ).catch((err) => {
+      if (err.response.status) {          
+        const location = {
+          pathname: '/login',
+          state: { from: 'Predict' }
+        }
+    
+        this.props.history.push(location)
+      }
+    })
   }
 
 	render () {
@@ -27,3 +41,4 @@ export default class Predict extends React.Component {
     )
   }
 }
+export default withRouter(Predict);

@@ -1,4 +1,5 @@
 import React from "react";
+import {withRouter} from 'react-router';
 import './Header.css';
 import APIClient from '../../Actions/apiClient';
 
@@ -9,24 +10,20 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 
-
 import logo from '../../Static/Images/g_roussy_logo.png';
 import flag_fr from '../../Static/Images/fr_flag_icon.png';
 import flag_gb from '../../Static/Images/uk_flag_icon.png';
 
-export default class Header extends React.Component {
+class Header extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      userIsLoggedIn: false
+      userIsLoggedIn: false,
+      redirect: false
     }
     this.changeLanguage = this.changeLanguage.bind(this);
     this.logout = this.logout.bind(this);
-    
-    if (window.location.pathname !== '/login') {
-    
-    }
   }
 
   async componentDidMount() { 
@@ -36,16 +33,13 @@ export default class Header extends React.Component {
       this.setState({
         userIsLoggedIn: true
       })
-    ).catch((err) => {
-      if (err.response.status === 401) {
-        return;
-      }
+    ).catch((err) => { console.log(err)
+
     })
   }
 
   changeLanguage = (event) => {
     let language = event.target.id;
-
     if (language === 'language-en') {
       console.log('english');
     }
@@ -57,9 +51,9 @@ export default class Header extends React.Component {
   logout = (event) => {
     this.apiClient.logout();
     this.setState({
-      userIsLoggedIn: false
+      userIsLoggedIn: false,
     });
-    return;
+    this.props.history.push('/login');
   }
   
   render() {
@@ -138,3 +132,4 @@ export default class Header extends React.Component {
       )
     }
 };
+export default withRouter(Header);

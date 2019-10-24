@@ -58,11 +58,8 @@ export default class Login extends React.Component {
     this.apiClient.login(user)
     .then(res => {
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('refresh', res.data.refresh);
-      this.props.history.push({
-        pathname: '/',
-        state: { isLoggedIn: true }
-      })
+      var {from} = this.props.location.state || {from: {pathname: '/'}}
+      this.props.history.push(from); 
       window.location.reload()
     }).catch((err) => {
       if (err.response.status === 401) {

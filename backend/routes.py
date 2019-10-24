@@ -16,19 +16,16 @@ routes = Blueprint('routes', __name__)
 def loginUser():
     return auth.authUser()
 
-# If the token is close to expiration and the user is still using the app, revalidate it
-@routes.route('/refresh', methods=['POST'])
-@jwt_refresh_token_required
-def refreshToken():
-    return auth.refresh()
-
 # Boolean to check whether the current user is authenticated or not
 @routes.route('/hasAuth', methods=['GET'])
 @jwt_required
 def checkAuth():
+  try:
     token = request.headers.get('Authorization')
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+  except:
+    return jsonify({'ok': False, 'message': 'invalid username or password'}), 401
 
 # Revoke accessToken and put insert it into the blacklist
 @routes.route('/logoutAccessToken', methods=['DELETE'])
@@ -36,12 +33,6 @@ def checkAuth():
 def logoutAccessToken():
     return auth.logout()
 
-# Revoke refreshToken and put insert it into the blacklist
-@routes.route('/logoutRefreshToken', methods=['DELETE'])
-@jwt_refresh_token_required
-def logoutRefreshToken():
-    return auth.logout()
-###
 
 @routes.route('/hello', methods=['GET'])
 @jwt_required

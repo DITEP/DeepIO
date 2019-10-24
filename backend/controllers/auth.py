@@ -15,18 +15,12 @@ def authUser():
     if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
       del user['password']
       access_token = create_access_token(identity=data)
-      refresh_token = create_refresh_token(identity=data)
       user['token'] = access_token
-      user['refresh'] = refresh_token
       return jsonify({'ok': True, 'data': user}), 200
     else:
       return jsonify({'ok': False, 'message': 'invalid username or password'}), 401
   else:
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
-
-
-def checkAuth():
-  return True
 
 # If the user is still using the app and the token is close to expiration date, revalidate the user
 def refresh():
@@ -39,15 +33,7 @@ def refresh():
 # Endpoint for revoking the current users access token
 def logout():
     jti = get_raw_jwt()['jti']
-    try:
-        mongo.db.blacklist.insert_one({'expiredToken' : jti})
-        return jsonify({"msg": "Successfully logged out"}), 200
-    except:
-        return jsonify({'ok': False, 'message': 'Something went wrong'}), 500
-
-# Endpoint for revoking the current users refresh token
-def logout2():
-    jti = get_raw_jwt()['jti']    
+    print(jti)
     try:
         mongo.db.blacklist.insert_one({'expiredToken' : jti})
         return jsonify({"msg": "Successfully logged out"}), 200

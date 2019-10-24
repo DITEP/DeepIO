@@ -1,11 +1,12 @@
 import React from "react";
+import {withRouter} from 'react-router';
 import './Queue.css';
 import APIClient from '../../Actions/apiClient';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-export default class Queue extends React.Component {
+class Queue extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
@@ -16,7 +17,20 @@ export default class Queue extends React.Component {
   async componentDidMount() {
     this.apiClient = new APIClient();
 
-    this.apiClient.getQueue().then((data) =>
+    this.apiClient.getAuth().then((data) =>
+      console.log(data)
+    ).catch((err) => {
+      if (err.response.status) {          
+        const location = {
+          pathname: '/login',
+          state: { from: 'Queue' }
+        }
+    
+        this.props.history.push(location)
+      }
+    })
+
+    /*this.apiClient.getQueue().then((data) =>
       this.setState({
         queue: data
       })
@@ -24,7 +38,7 @@ export default class Queue extends React.Component {
         if (err.response.status === 401) {
           return this.props.history.push('/login');
         }
-      })
+      })*/
     }
 
   createItems(item) {
@@ -50,3 +64,4 @@ export default class Queue extends React.Component {
     )
   }
 }
+export default withRouter(Queue);

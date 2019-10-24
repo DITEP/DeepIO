@@ -32,3 +32,19 @@ def handle_revoked_token_error():
         'sub_status': 42,
         'msg': 'The token has been revoked'
     }), 401
+        
+@jwt.user_loader_error_loader
+def handle_user_loader_error():
+    return jsonify({
+        'status': 422,
+        'sub_status': 42,
+        'msg': 'User loader failed'
+    }), 401
+    
+@jwt.claims_verification_failed_loader
+def handle_verification_failed_error():
+    return jsonify({
+        'status': 422,
+        'sub_status': 42,
+        'msg': 'Verification failed'
+    }), 401

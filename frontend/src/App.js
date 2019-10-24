@@ -27,12 +27,12 @@ function App() {
             
             <Switch>
               <Route path="/" exact component={Home} />
-              <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
               <Route path="/profile" component={Profile} />
               <Route path="/queue" component={Queue} />
               <Route path="/predict" component={Predict} />
               <Route path="/history" component={History} />
+              <Route path="/login" component={Login} />
             </Switch>
             
           </div>

@@ -30,10 +30,13 @@ class APIClient {
   
   logout() {
     this.perform('delete', '/logoutAccessToken').then(() => {
-      localStorage.setItem('token', localStorage.getItem('refresh'));
-      return this.perform('delete', '/logoutRefreshToken');
+      console.log('done');
     })
-  }  
+  }
+  
+  refresh() {
+    return this.performRefresh('post', '/refresh');
+  }
 
   changeEmail() {
     return this.perform('put', '/changeEmail');  
