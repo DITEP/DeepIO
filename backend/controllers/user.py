@@ -28,9 +28,17 @@ def getUser():
       return jsonify(data), 200
     return jsonify({'ok': False, 'message': 'No user!'}), 400
 
-def updateUser():
-    return
-
+def checkPassword():
+  try:
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    user = mongo.db.users.find_one({'email': current_user['email']})
+    if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
+      return jsonify({'ok': True, 'message': 'Password is correct.'}), 200
+    return jsonify({'ok': False, 'message': 'Wrong credentials'}), 401
+  except:
+     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+    
 def changePassword():
     current_user = get_jwt_identity()
     data = request.get_json()

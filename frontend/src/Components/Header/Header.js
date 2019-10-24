@@ -20,10 +20,13 @@ class Header extends React.Component {
 
     this.state = {
       userIsLoggedIn: false,
-      redirect: false
+      redirect: false,
+      showBanner: true
     }
+    
     this.changeLanguage = this.changeLanguage.bind(this);
     this.logout = this.logout.bind(this);
+    this.closeBanner = this.closeBanner.bind(this);
   }
 
   async componentDidMount() { 
@@ -56,7 +59,14 @@ class Header extends React.Component {
     this.props.history.push('/login');
   }
   
+  closeBanner = (event) => { console.log('hello?')
+    this.setState({
+    showBanner: false
+      })
+  }
+  
   render() {
+    var {message} = this.props.location.state || {message: ''}
     return (
       <div>
         <div id="top-header">
@@ -128,6 +138,10 @@ class Header extends React.Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+        <div className={'banner ' + ((this.state.showBanner && message) ? '' : 'hidden')}>
+          <p className="banner-message-text">{message}</p>
+          <span className="banner-close" onClick={this.closeBanner}></span>
+        </div>
       </div>
       )
     }

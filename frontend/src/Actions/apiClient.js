@@ -42,6 +42,10 @@ class APIClient {
     return this.perform('put', '/changeEmail');  
   }
   
+  checkPassword(oldPassword) {console.log(oldPassword)
+    return this.perform('post', '/checkPassword', oldPassword);  
+  }
+  
   changePassword(newPassword) {
     return this.perform('put', '/changePassword', newPassword);
   }

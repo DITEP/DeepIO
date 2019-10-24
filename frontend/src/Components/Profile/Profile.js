@@ -117,25 +117,37 @@ export default class Profile extends React.Component {
       return;      
     }
     
-    let user = {
-      email: this.state.profile.email,
-      password: this.state.password
-    }
+    this.apiClient.checkPassword({'password': this.state.oldPassword}).then((result) => { 
+      this.apiClient.changePassword({'password': this.state.password})
+      .then(res => {
+        this.apiClient.logout()
+      })
+      .then(res => {
+        const location = {
+          pathname: '/login',
+          state: { message: 'Your password has been changed. Please log back in with your new credentials.' }
+        }    
+        this.props.history.push(location)
 
-    this.apiClient.changePassword({'password': this.state.password})
-    .then(res => {
-      this.apiClient.logout()
-    })
-    .then(res => {
-      this.props.history.push("/login")
-      window.location.reload();
-    }).catch((err) => { console.log(err)
-          this.setState({
-            otherError: true
+        window.location.reload();
+      }).catch((err) => { console.log(err)
+        this.setState({
+          otherError: true
+        })
+        return;
+      })
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        this.setState({
+            oldPasswordWrong: true
           })
           return;
-        }
-      )
+      }
+      this.setState({
+        otherError: true
+      })
+      return;
+    }) 
   }
 
   render() {
@@ -178,7 +190,7 @@ export default class Profile extends React.Component {
                   <Form.Control
                     type="password"
                     placeholder="Password"
-                    name='password'
+                    name='oldPassword'
                     value={this.state.oldPassword}
                     onChange={this.handleInputChange}
                   />                
@@ -211,7 +223,7 @@ export default class Profile extends React.Component {
             This email address is already taken.
           </p>
           <p className={'password-error ' + (this.state.oldPasswordWrong ? 'show' : 'hidden')}>
-            Your old password is wrong.
+            Your old password is incorrect.
           </p>          
           <p className={'password-error ' + (this.state.passwordMismatch ? 'show' : 'hidden')}>
             Passwords must match!

@@ -60,6 +60,11 @@ def userControl():
 def changeEmail():
     return user.changeEmail()
 
+@routes.route('/checkPassword', methods = ['POST'])
+@jwt_required
+def checkPassword():
+    return user.checkPassword()
+    
 @routes.route('/changePassword', methods = ['PUT'])
 @jwt_required
 def changePassword():

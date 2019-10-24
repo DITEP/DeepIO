@@ -23,7 +23,7 @@ class Queue extends React.Component {
       if (err.response.status) {          
         const location = {
           pathname: '/login',
-          state: { from: 'Queue' }
+          state: { from: 'Queue', message: 'You have to be logged in to view this page.' }
         }
     
         this.props.history.push(location)
