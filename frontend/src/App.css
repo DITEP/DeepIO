@@ -42,3 +42,12 @@ body {
 .hidden {
   display: none;
 }
+
+.btn-primary {
+  background-color: #00b5ad;
+  border-color: #00b5ad;
+}
+
+a {
+  color: #00b5ad;
+}
