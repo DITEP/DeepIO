@@ -5,7 +5,8 @@ from models.userModel import validate_user
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, get_raw_jwt)
 import controllers.errors
- 
+from datetime import datetime
+
 # Try to find user in DB, check password against hash, generate tokens or send back error message
 def authUser():
   data = validate_user(request.get_json())
@@ -33,9 +34,11 @@ def refresh():
 # Endpoint for revoking the current users access token
 def logout():
     jti = get_raw_jwt()['jti']
-    print(jti)
+    token = {}
+    token['expiredToken'] = jti
+    token['createdAt'] = datetime.utcnow()
     try:
-        mongo.db.blacklist.insert_one({'expiredToken' : jti})
+        mongo.db.blacklist.insert_one(token)
         return jsonify({"msg": "Successfully logged out"}), 200
     except:
         return jsonify({'ok': False, 'message': 'Something went wrong'}), 500

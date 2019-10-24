@@ -1,10 +1,12 @@
 blacklist_schema = {
     "type": "object",
     "properties": {
+        "createdAt": {
+            "type": "string",
+        },
         "expiredToken": {
             "type": "string",
         },
-        "createdAt": new Date()
     },
     "required": ["expiredToken", "createdAt"],
     "additionalProperties": False
