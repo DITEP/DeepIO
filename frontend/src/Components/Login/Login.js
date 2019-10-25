@@ -126,7 +126,8 @@ class Login extends React.Component {
                 {t('login.loginbutton')}
               </Button>
             </Form>
-            
+            <a href='/register'>{t('login.registerlink')}</a>
+            <br /><hr />
             <a href='/login'>{t('login.forgotpasswordlink')}</a>
                         
           </div>

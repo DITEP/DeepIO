@@ -21,6 +21,7 @@
     "passwordcredentialerror": "Your email address or password is not correct.",
     "othererror": "Something went wrong. Please try again later.",
     "loginbutton": "Submit",
+    "registerlink": "Don't have an account yet? Click here to sign up",
     "forgotpasswordlink": "Forgot your password? Click here to reset"
   },
   "profile": {
@@ -60,5 +61,11 @@
   "messages": {
     "passwordchangesuccess": "Your password has been changed. Please log back in with your new credentials.",
     "notauthorized": "You have to be logged in to view this page."
+  },
+  "prediction": {
+    "header": "Submit a new prediction",
+    "titleplaceholder": "Enter a title for your prediction",
+    "predictiontitlehelp": "This will be shown in the public queue.",
+    "dropzonehelper": "Click here to open a menu or drag your file into this area"
   }
 }
