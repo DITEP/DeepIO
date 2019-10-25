@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import logo from './logo.svg';
 import { Link, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
@@ -18,24 +18,26 @@ function App() {
     return (
       <Router>
         <div className="App">
-          <div id='wrapper'>
-            <header className="App-header">
-      				<div className='header-contents'>
-                <Header />
-    				  </div>
-            </header>
+	        <Suspense fallback={(<div>Loading</div>)}>
+            <div id='wrapper'>
+              <header className="App-header">
+    		        <div className='header-contents'>
+                  <Header />
+   		          </div>
+              </header>
             
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/register" component={Register} />
-              <Route path="/profile" component={Profile} />
-              <Route path="/queue" component={Queue} />
-              <Route path="/predict" component={Predict} />
-              <Route path="/history" component={History} />
-              <Route path="/login" component={Login} />
-            </Switch>
+             <Switch>
+               <Route path="/" exact component={Home} />
+               <Route path="/register" component={Register} />
+               <Route path="/profile" component={Profile} />
+               <Route path="/queue" component={Queue} />
+               <Route path="/predict" component={Predict} />
+               <Route path="/history" component={History} />
+               <Route path="/login" component={Login} />
+             </Switch>
             
-          </div>
+            </div>
+        	</Suspense>
         </div>
       </Router>
     );

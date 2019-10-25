@@ -1,0 +1,10 @@
+{
+  "header": {
+    "home": "Test",
+    "queue": "Test 2",
+    "prediction": "Test 3"
+  },
+  "weather": {
+    "title": "Weather forecast"
+  }
+}

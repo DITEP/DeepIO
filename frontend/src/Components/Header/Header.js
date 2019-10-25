@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 
+import { withTranslation } from 'react-i18next';
+
 import logo from '../../Static/Images/g_roussy_logo.png';
 import flag_fr from '../../Static/Images/fr_flag_icon.png';
 import flag_gb from '../../Static/Images/uk_flag_icon.png';
@@ -24,7 +26,6 @@ class Header extends React.Component {
       showBanner: true
     }
     
-    this.changeLanguage = this.changeLanguage.bind(this);
     this.logout = this.logout.bind(this);
     this.closeBanner = this.closeBanner.bind(this);
   }
@@ -41,15 +42,7 @@ class Header extends React.Component {
     })
   }
 
-  changeLanguage = (event) => {
-    let language = event.target.id;
-    if (language === 'language-en') {
-      console.log('english');
-    }
-    if (language === 'language-fr') {
-      console.log('french');
-    }
-  }
+
   
   logout = (event) => {
     this.apiClient.logout();
@@ -66,7 +59,19 @@ class Header extends React.Component {
   }
   
   render() {
+    const { t, i18n } = this.props;
     var {message} = this.props.location.state || {message: ''}
+    
+    const changeLanguage = language => {
+      console.log(language);
+      if (language === 'en') {
+        i18n.changeLanguage('en-US');
+      }
+      if (language === 'fr') {console.log('qdsq');
+        i18n.changeLanguage('fr-FR');
+      }
+    }
+        
     return (
       <div>
         <div id="top-header">
@@ -95,16 +100,16 @@ class Header extends React.Component {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/">{t('header.home')}</Nav.Link>
               <span className="nav-link-separator">|</span>
-              <Nav.Link href="/queue">Prediction Queue</Nav.Link>
+              <Nav.Link href="/queue">{t('header.queue')}</Nav.Link>
               <span className="nav-link-separator">|</span>
-              <Nav.Link href="/predict">New Prediction</Nav.Link>
+              <Nav.Link href="/predict">{t('header.prediction')}</Nav.Link>
             </Nav>
           </Navbar.Collapse>
   
           <NavDropdown title="Languages" id="language-selector" className='mr-auto'>
-            <NavDropdown.Item id="language-en" onClick={this.changeLanguage}>
+            <NavDropdown.Item id="language-en" onClick={() => changeLanguage('en')}>
               <img
                 src={flag_gb}
                 width="30"
@@ -114,7 +119,7 @@ class Header extends React.Component {
               /> 
               <p className="language-name">English</p>
             </NavDropdown.Item>
-            <NavDropdown.Item id="language-fr" onClick={this.changeLanguage}>
+            <NavDropdown.Item id="language-fr" onClick={() => changeLanguage('fr')}>
               <img
                 src={flag_fr}
                 alt="French"
@@ -146,4 +151,4 @@ class Header extends React.Component {
       )
     }
 };
-export default withRouter(Header);
+export default withRouter(withTranslation()(Header));
