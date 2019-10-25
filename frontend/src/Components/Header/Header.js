@@ -52,7 +52,7 @@ class Header extends React.Component {
     this.props.history.push('/login');
   }
   
-  closeBanner = (event) => { console.log('hello?')
+  closeBanner = (event) => {
     this.setState({
     showBanner: false
       })
@@ -63,11 +63,10 @@ class Header extends React.Component {
     var {message} = this.props.location.state || {message: ''}
     
     const changeLanguage = language => {
-      console.log(language);
       if (language === 'en') {
         i18n.changeLanguage('en-US');
       }
-      if (language === 'fr') {console.log('qdsq');
+      if (language === 'fr') {
         i18n.changeLanguage('fr-FR');
       }
     }
@@ -117,7 +116,7 @@ class Header extends React.Component {
                 alt="English"
                 className="d-inline-block align-top language-flag"
               /> 
-              <p className="language-name">English</p>
+              <p className="language-name">{t('languages.english')}</p>
             </NavDropdown.Item>
             <NavDropdown.Item id="language-fr" onClick={() => changeLanguage('fr')}>
               <img
@@ -127,7 +126,7 @@ class Header extends React.Component {
                 height="30"
                 className="d-inline-block align-top language-flag"
               />
-              <p className="language-name">French</p>
+              <p className="language-name">{t('languages.french')}</p>
             </NavDropdown.Item>
           </NavDropdown>
   

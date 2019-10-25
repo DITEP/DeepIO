@@ -1,10 +1,27 @@
 {
+  "languages": {
+    "english": "English",
+    "french": "French"
+  },
   "header": {
     "home": "Home",
     "queue": "Prediction Queue",
     "prediction": "New Prediction"
   },
-  "weather": {
-    "title": "Weather forecast"
+  "profile": {
+    "show": "Show profile",
+    "history": "Prediction History",
+    "logout": "Logout"
+  },
+  "login": {
+    "email": "Email address",
+    "emailplaceholder": "Enter your email address",
+    "emailhelp": "The email adress you have used to create an account." ,
+    "passwordplaceholder": "Enter your password",
+    "passwordsecurityerror": "Password not long enough!",
+    "passwordcredentialerror": "Your email address or password is not correct.",
+    "othererror": "Something went wrong. Please try again later.",
+    "loginbutton": "Submit",
+    "forgotpasswordlink": "Forgot your password? Click here to reset"
   }
 }

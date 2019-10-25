@@ -5,7 +5,9 @@ import APIClient from '../../Actions/apiClient';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-export default class Login extends React.Component {
+import { withTranslation } from 'react-i18next';
+
+class Login extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -75,6 +77,7 @@ export default class Login extends React.Component {
   }  
 
 	render () {
+    const { t } = this.props;
     return (
         <div className="container">
           <div className="container-fluid">
@@ -82,25 +85,25 @@ export default class Login extends React.Component {
             <Form className='log-in-form col-8 col-centered' onSubmit={this.onSubmit}>
           
               <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>{t('login.email')}</Form.Label>
                 <Form.Control 
                   type="email" 
-                  placeholder="Enter email" 
+                  placeholder={t('login.emailplaceholder')}
                   name='email' 
                   value={this.state.email}
                   onChange={this.handleInputChange}
                   required
                 />
                 <Form.Text className="text-muted">
-                  The email adress you have used to create an account.
+                  {t('login.emailhelp')}
                 </Form.Text>
               </Form.Group>
             
               <Form.Group>
-                <Form.Label>Password</Form.Label>
+                <Form.Label>{t('login.password')}</Form.Label>
                 <Form.Control 
                   type="password" 
-                  placeholder="Password" 
+                  placeholder={t('login.passwordplaceholder')} 
                   name='password'
                   value={this.state.password}
                   onChange={this.handleInputChange}
@@ -108,26 +111,28 @@ export default class Login extends React.Component {
                 />
                 
                 <p className={'login-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
-                  Password not long enough!
+                  {t('login.passwordsecurityerror')} 
                 </p>                
                 <p className={'login-error ' + (this.state.wrongCredentials ? 'show' : 'hidden')}>
-                  Your email address or password is not correct.
+                  {t('login.passwordcredentialerror')}  
                 </p>
                 <p className={'login-error ' + (this.state.otherError ? 'show' : 'hidden')}>
-                  Something went wrong. Please try again later.
+                  {t('login.othererror')}
                 </p>
                 
               </Form.Group>
               
               <Button variant="primary" type="submit">
-                Submit
+                {t('login.loginbutton')}
               </Button>
             </Form>
             
-            <a href='/login'>Forgot your password? Click here to reset</a>
+            <a href='/login'>{t('login.forgotpasswordlink')}</a>
                         
           </div>
         </div>
       );
     }
 }
+
+export default withTranslation()(Login);
