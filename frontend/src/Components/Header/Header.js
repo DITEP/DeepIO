@@ -134,10 +134,10 @@ class Header extends React.Component {
             <Nav >
               <Nav.Link href="/login" className={'mr-auto ' + (this.state.userIsLoggedIn ? 'hidden' : '')}>Login</Nav.Link>
               <NavDropdown title="Profile" id="basic-nav-dropdown" className={'mr-auto ' + (this.state.userIsLoggedIn ? '' : 'hidden')}>
-                <NavDropdown.Item href="/profile">Show Profile</NavDropdown.Item>
-                <NavDropdown.Item href="/history">Prediction History</NavDropdown.Item>
+                <NavDropdown.Item href="/profile">{t('header.showprofile')}</NavDropdown.Item>
+                <NavDropdown.Item href="/history">{t('header.showhistory')}</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={this.logout}>Logout</NavDropdown.Item>
+                <NavDropdown.Item onClick={this.logout}>{t('header.showlogout')}</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

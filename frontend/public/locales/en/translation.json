@@ -6,17 +6,16 @@
   "header": {
     "home": "Home",
     "queue": "Prediction Queue",
-    "prediction": "New Prediction"
-  },
-  "profile": {
-    "show": "Show profile",
-    "history": "Prediction History",
-    "logout": "Logout"
+    "prediction": "New Prediction",
+    "showprofile": "Show profile",
+    "showhistory": "Prediction History",
+    "showlogout": "Logout"
   },
   "login": {
     "email": "Email address",
     "emailplaceholder": "Enter your email address",
     "emailhelp": "The email adress you have used to create an account." ,
+    "password": "Password",
     "passwordplaceholder": "Enter your password",
     "passwordsecurityerror": "Password not long enough!",
     "passwordcredentialerror": "Your email address or password is not correct.",
@@ -50,12 +49,16 @@
     "password": "Password",
     "passwordplaceholder": "Type in wyour new password",
     "repeatpassword": "Repeat password",
-    "repeatpasswordplaceholder": "Type in your new password once again";
+    "repeatpasswordplaceholder": "Type in your new password once again",
     "passwordmismatcherror": "Your two passwords are not the same,",
     "passwordinsecureerror": "Your password is not really secure.",
     "emailtakenerror": "The email you want to ue is already taken",
     "othererror": "Somthing went wrong. Try again later.",
     "submitbutton": "Submit",
     "loginlinkbottom": ""
+  },
+  "messages": {
+    "passwordchangesuccess": "Your password has been changed. Please log back in with your new credentials.",
+    "notauthorized": "You have to be logged in to view this page."
   }
 }

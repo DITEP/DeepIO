@@ -6,6 +6,8 @@ import APIClient from '../../Actions/apiClient';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import i18n from "i18next";
+
 class Queue extends React.Component {
   constructor(props) {
 		super(props);
@@ -23,7 +25,7 @@ class Queue extends React.Component {
       if (err.response.status) {          
         const location = {
           pathname: '/login',
-          state: { from: 'Queue', message: 'You have to be logged in to view this page.' }
+          state: { from: 'Queue', message: i18n.t('messages.notauthorized') }
         }
     
         this.props.history.push(location)

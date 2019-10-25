@@ -63,7 +63,7 @@ class Login extends React.Component {
       var {from} = this.props.location.state || {from: {pathname: '/'}}
       this.props.history.push(from); 
       window.location.reload()
-    }).catch((err) => {
+    }).catch((err) => {console.log(err)
       if (err.response.status === 401) {
         this.setState({
           wrongCredentials: true

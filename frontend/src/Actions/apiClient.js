@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URI = 'http://vls-diteplearn:8000';
+const BASE_URI = 'http://vls-diteplearn:8001';
 
 const client = axios.create({
  baseURL: BASE_URI,

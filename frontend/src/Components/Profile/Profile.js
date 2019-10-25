@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 import { withTranslation } from 'react-i18next';
+import i18n from "i18next";
 
 class Profile extends React.Component {
 	constructor(props) {
@@ -127,7 +128,7 @@ class Profile extends React.Component {
       .then(res => {
         const location = {
           pathname: '/login',
-          state: { message: 'Your password has been changed. Please log back in with your new credentials.' }
+          state: { message: i18n.t('messages.passwordchangesuccess') }
         }    
         this.props.history.push(location)
 
