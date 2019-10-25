@@ -5,7 +5,9 @@ import APIClient from '../../Actions/apiClient';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-export default class Register extends React.Component {
+import { withTranslation } from 'react-i18next';
+
+class Register extends React.Component {
 	constructor(props) {
 		super();
 		this.state = {
@@ -82,6 +84,7 @@ export default class Register extends React.Component {
   }
 
 	render () {
+    const { t } = this.props;
     return (
         <div className="container">
           <div className="container-fluid">
@@ -89,35 +92,35 @@ export default class Register extends React.Component {
             <Form className='sign-up-form col-8 col-centered' onSubmit={this.onSubmit}>
               
               <Form.Group>
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>{t('register.emailaddress')}</Form.Label>
                 <Form.Control 
                   type="email" 
-                  placeholder="Enter email" 
+                  placeholder={t('register.emailplaceholder')}
                   name='email' 
                   value={this.state.email}
                   onChange={this.handleInputChange}
                   required
                 />
                 <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
+                  {t('register.emailhelper')}
                 </Form.Text>
               </Form.Group>
             
               <Form.Group>
-                <Form.Label>Password</Form.Label>
+                <Form.Label>{t('register.password')}</Form.Label>
                 <Form.Control 
                   type="password" 
-                  placeholder="Password" 
+                  placeholder={t('register.passwordplaceholder')}
                   name='password'
                   value={this.state.password}
                   onChange={this.handleInputChange}
                   required
                 />
                 
-                <Form.Label>Repeat Password</Form.Label>
+                <Form.Label>{t('register.repeatpassword')}</Form.Label>
                 <Form.Control 
                   type="password" 
-                  placeholder="Password" 
+                  placeholder={t('register.repeatpasswordplaceholder')}
                   name='passwordRepeat'
                   value={this.state.passwordRepeat}
                   onChange={this.handleInputChange}
@@ -125,29 +128,30 @@ export default class Register extends React.Component {
                 />
                 
                 <p className={'password-error ' + (this.state.passwordMismatch ? 'show' : 'hidden')}>
-                  Passwords must match!
+                  {t('register.passwordmismatcherror')}
                 </p>
                 <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
-                  Password not secure enough!
+                  {t('register.passwordinsecureerror')}
                 </p>
                 <p className={'password-error ' + (this.state.emailAlreadyUsed ? 'show' : 'hidden')}>
-                  This email address is already taken.
+                  {t('register.emailtakenerror')}
                 </p>
                 <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
-                  Your request could not be progressed. Please try again later.
+                  {t('register.othererror')} 
                 </p>                
               </Form.Group>
               
               <Button variant="primary" type="submit">
-                Submit
+                {t('register.submitbutton')}
               </Button>
               
             </Form>
             
-            <a href='/login'>Already have an account? Click here to login</a>
+            <a href='/login'>{t('register.loginlinkbottom')}</a>
           
           </div>
         </div>
       );
     }
 }
+export default withTranslation()(Register);

@@ -23,5 +23,39 @@
     "othererror": "Something went wrong. Please try again later.",
     "loginbutton": "Submit",
     "forgotpasswordlink": "Forgot your password? Click here to reset"
+  },
+  "profile": {
+    "changemail": "Change email address",
+    "emailinput": "New email address",
+    "emailplaceholder": "Type in your new email address",
+    "changemailsubmit": "Submit",
+    "changepassword": "Change passwod",
+    "oldpassword": "Current password",
+    "oldpasswordplaceholder": "Please type in your current password",
+    "newpassword": "New password",
+    "newpasswordplaceholder": "Please type in your new password",
+    "repeatpassword": "Repeat password",
+    "repeatpasswordplaceholder": "Please repat your new password",
+    "changepasswordsubmit": "Submit",
+    "emailusederror": "The email address is already taken.",
+    "oldpasswordwrongerror": "Your current password was incorrect.",
+    "passwordmismatcherror": "Your new password and the repeated password are not the same!",
+    "passwordnotsecureerror": "Your new password is not secure enough",
+    "othererror": "An error occured. Please try again later."
+  },
+  "register": {
+    "emailaddress": "Email address",
+    "emailplaceholder": "Type in the email address you wish to use",
+    "emailhelper": "We'll never share your email with anyone else.",
+    "password": "Password",
+    "passwordplaceholder": "Type in wyour new password",
+    "repeatpassword": "Repeat password",
+    "repeatpasswordplaceholder": "Type in your new password once again";
+    "passwordmismatcherror": "Your two passwords are not the same,",
+    "passwordinsecureerror": "Your password is not really secure.",
+    "emailtakenerror": "The email you want to ue is already taken",
+    "othererror": "Somthing went wrong. Try again later.",
+    "submitbutton": "Submit",
+    "loginlinkbottom": ""
   }
 }

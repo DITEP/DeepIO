@@ -5,7 +5,9 @@ import APIClient from '../../Actions/apiClient';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-export default class Profile extends React.Component {
+import { withTranslation } from 'react-i18next';
+
+class Profile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -151,21 +153,22 @@ export default class Profile extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <div className="container">
         <div className="container-fluid">
 
           <div className="profile-settings-box"> 
             <div className={'change-profile-header ' +  (this.state.isEmailOpen ? 'active' : '')}>
-              <a className="change-profile-link" onClick={this.openChangeEmail}>Change email</a>
+              <a className="change-profile-link" onClick={this.openChangeEmail}>{t('profile.changemail')}</a>
             </div>
             <div className={'change-setting-container ' +  (this.state.isEmailOpen ? 'col' : 'hidden')}>
               <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitEmail}>
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>{t('profile.emailinput')}</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder={t('profile.emailplaceholder')}
                     name='email'
                     value={this.state.email}
                     onChange={this.handleInputChange}
@@ -173,7 +176,7 @@ export default class Profile extends React.Component {
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="submit-profile-change">
-                  Submit
+                  {t('profile.changemailsubmit')}
                 </Button>
               </Form>
             </div>
@@ -181,31 +184,31 @@ export default class Profile extends React.Component {
           
           <div className="profile-settings-box"> 
             <div className={'change-profile-header ' +  (this.state.isPasswordOpen ? 'active' : '')}>
-              <a className="change-profile-link" onClick={this.openChangePassword}>Change password</a>
+              <a className="change-profile-link" onClick={this.openChangePassword}>{t('profile.changepassword')}</a>
             </div>
             <div className={'change-setting-container ' +  (this.state.isPasswordOpen ? 'col' : 'hidden')}>
               <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitPassword}>
                 <Form.Group>
-                  <Form.Label>Old Password</Form.Label>
+                  <Form.Label>{t('profile.oldpassword')}</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('profile.oldpasswordplaceholder')}
                     name='oldPassword'
                     value={this.state.oldPassword}
                     onChange={this.handleInputChange}
                   />                
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>{t('profile.newpassword')}</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('profile.newpasswordplaceholder')}
                     name='password'
                     value={this.state.password}
                     onChange={this.handleInputChange}
                   />
-                  <Form.Label>Repeat Password</Form.Label>
+                  <Form.Label>{t('profile.repeatpassword')}</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder={t('profile.repeatpasswordplaceholder')}
                     name='passwordRepeat'
                     value={this.state.passwordRepeat}
                     onChange={this.handleInputChange}
@@ -213,26 +216,26 @@ export default class Profile extends React.Component {
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="submit-profile-change">
-                  Submit
+                  {t('profile.changepasswordsubmit')}
                 </Button>
               </Form>
             </div>
           </div>
           
           <p className={'password-error ' + (this.state.emailAlreadyUsed ? 'show' : 'hidden')}>
-            This email address is already taken.
+            {t('profile.emailusederror')} This email address is already taken.
           </p>
           <p className={'password-error ' + (this.state.oldPasswordWrong ? 'show' : 'hidden')}>
-            Your old password is incorrect.
+            {t('profile.oldpasswordwrongerror')} Your old password is incorrect.
           </p>          
           <p className={'password-error ' + (this.state.passwordMismatch ? 'show' : 'hidden')}>
-            Passwords must match!
+            {t('profile.passwordmismatcherror')} Passwords must match!
           </p>
           <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
-            Password not secure enough!
+            {t('profile.passwordnotsecureerror')} Password not secure enough!
           </p>
           <p className={'password-error ' + (this.state.otherError ? 'show' : 'hidden')}>
-            Your request could not be progressed. Please try again later.
+            {t('profile.othererror')} Your request could not be progressed. Please try again later.
           </p>
 
         </div>
@@ -240,3 +243,5 @@ export default class Profile extends React.Component {
     );
   }
 }
+
+export default withTranslation()(Profile);
