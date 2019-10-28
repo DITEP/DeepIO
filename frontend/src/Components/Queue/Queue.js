@@ -19,15 +19,19 @@ class Queue extends React.Component {
     this.apiClient.getAuth().then((data) =>
       console.log(data)
     ).catch((err) => {
-      if (err.response.status) {          
-        const location = {
-          pathname: '/login',
-          state: { from: 'Queue', message: i18n.t('messages.notauthorized') }
+        if (err.response.status) {
+          if (err.response.status === 401) {        
+            const location = {
+              pathname: '/login',
+              state: { 
+                from: 'Queue', 
+                message: i18n.t('messages.notauthorized') 
+              }
+            }      
+            this.props.history.push(location)
+          }
         }
-    
-        this.props.history.push(location)
-      }
-    })
+      })
 
     /*this.apiClient.getQueue().then((data) =>
       this.setState({
