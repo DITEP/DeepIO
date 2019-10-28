@@ -10,9 +10,11 @@ from datetime import datetime
 # Try to find user in DB, check password against hash, generate tokens or send back error message
 def authUser():
   data = validate_user(request.get_json())
+  print(data)
   if data['ok']:
     data = data['data']
     user = mongo.db.users.find_one({'email': data['email']})
+    
     if user and flask_bcrypt.check_password_hash(user['password'], data['password']):
       del user['password']
       access_token = create_access_token(identity=data)

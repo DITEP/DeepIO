@@ -12,12 +12,22 @@ user_schema = {
         "password": {
             "type": "string",
             "minLength": 5
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type" : "object",
+            "properties" : {
+              "jobID" : {                           
+                  "type" : "string"
+              }
+            }
+          }
         }
     },
     "required": ["email", "password"],
     "additionalProperties": False
 }
-
 
 def validate_user(data):
     try:

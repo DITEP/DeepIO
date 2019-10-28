@@ -34,8 +34,8 @@ class Header extends React.Component {
       this.setState({
         userIsLoggedIn: true
       })
-    ).catch((err) => { console.log(err)
-
+    ).catch((err) => { 
+      console.log(err)
     })
   }
 

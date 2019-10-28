@@ -51,7 +51,7 @@ def userControl():
     if request.method == 'POST':
         return user.createUser()
     if request.method == 'GET':
-        return user.getUser()
+        return user.getUserDetails()
     if request.method == 'PUT':
         return user.updateUser()
 

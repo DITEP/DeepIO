@@ -4,6 +4,7 @@ from application import flask_bcrypt
 from models.userModel import validate_user
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, get_raw_jwt)
+from bson import json_util
 import controllers.errors
 
 # Try to find email address in database. If it is unique, make new user. Otherwise send error message
@@ -21,11 +22,24 @@ def createUser():
         return jsonify({'ok': False, 'message': 'User exists parameters!'}), 409
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
-def getUser():
-    query = request.args
-    data = mongo.db.users.find_one({'email': query['email']})
+def getUserDetails():
+    currentUserMail = request.args['email']
+    
+    data =  mongo.db.users.aggregate(
+      [
+        {"$match": {"email": currentUserMail }}, 
+        {"$lookup": {"from": "predictions", "foreignField": "_id", "localField": "history", "as": "submittedJobs"}},
+        {"$project": {"submittedJobs.submittedBy": 0, "submittedJobs.storedAt": 0, "submittedJobs.vector": 0}}
+      ]
+    )
+    
+    user = {}
+    data = (list(data))[0]
+    user['email'] = data['email']
+    user['submittedJobs'] = data['submittedJobs']
+            
     if data:
-      return jsonify(data), 200
+      return json_util.dumps(user), 200
     return jsonify({'ok': False, 'message': 'No user!'}), 400
 
 def checkPassword():
@@ -46,7 +60,6 @@ def changePassword():
       data['password'] = flask_bcrypt.generate_password_hash(data['password'])
       print(current_user['email'], data['password'])
       currentUser = mongo.db.users.update_one({'email': current_user['email']}, {'$set': {'password': data['password']}}, upsert=False)
-      print (currentUser)
       return jsonify({'ok': True, 'message': 'Email updated successfully!'}), 200
     except:
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
