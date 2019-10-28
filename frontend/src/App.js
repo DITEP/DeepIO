@@ -1,6 +1,5 @@
 import React, {Suspense} from 'react';
-import logo from './logo.svg';
-import { Link, Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';

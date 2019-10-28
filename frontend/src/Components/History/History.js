@@ -2,9 +2,6 @@ import React from "react";
 import './History.css';
 import APIClient from '../../Actions/apiClient';
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-
 export default class History extends React.Component {
   constructor(props) {
 		super(props);

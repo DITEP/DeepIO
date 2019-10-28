@@ -3,9 +3,6 @@ import {withRouter} from 'react-router';
 import './Queue.css';
 import APIClient from '../../Actions/apiClient';
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-
 import i18n from "i18next";
 
 class Queue extends React.Component {

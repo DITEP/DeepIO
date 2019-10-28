@@ -15,12 +15,13 @@ class Predict extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
-      queue: [],
       dropBoxIsHidden: false,
       fileIsHidden: true,
       file: {},
       fileName: '',
-      uploadProgress: 0
+      uploadProgress: 0,
+      successfulUpload: false,
+      uploading: false,
     }
     this.onDrop = (files) => {
       this.setState({file: files[0]});
@@ -35,6 +36,7 @@ class Predict extends React.Component {
     this.sendRequest = this.sendRequest.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
+    this.startPrediction = this.startPrediction.bind(this);
   }
 
   async componentDidMount() {
@@ -98,14 +100,14 @@ class Predict extends React.Component {
       .then(function() {
         self.setState({dropBoxIsHidden: 'hidden'})
         self.setState({fileIsHidden: ''});
-        self.setState({ successfullUploaded: true, uploading: false });
+        self.setState({ successfulUpload: true, uploading: false });
         self.setState({file: process.env.PUBLIC_URL + '/uploads/' + file.name}); // TODO
         self.setState({fileName: file.name});
       })
     })
     .catch(e => {
       // Not Production ready! Do some error handling here instead...
-      this.setState({ successfullUploaded: true, uploading: false });
+      this.setState({ successfulUpload: true, uploading: false });
     })
   }
   
@@ -116,6 +118,12 @@ class Predict extends React.Component {
       file: {}
     });
   }
+  
+  startPrediction() {
+    if (this.state.successfulUpload) {
+      /* ... */
+    }
+  }
 
 
 	render () {
@@ -123,42 +131,50 @@ class Predict extends React.Component {
     return (
       <div className="container">
         <div className="container-fluid">
+        
           <p className="dropzone-header">{t('prediction.header')}</p>
           
-            <div className="new-prediction-form">
-              <div className="input-left-side">
-                <Dropzone onDrop={this.onDrop}>
-                  {({getRootProps, getInputProps}) => (
-                    <section className={'container ' + (this.state.dropBoxIsHidden ? 'hidden' : '')}>
-    
-                      <div {...getRootProps({className: 'dropzone'})}>
-                        <input {...getInputProps()} />
-                        <p>{t('prediction.dropzonehelper')}</p>
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
-                <div className={'preview-file ' + (this.state.fileIsHidden ? 'hidden' : '')}>
-                  <p>{this.state.file.name}</p>
+          <div className="new-prediction-form">
+            <div className="input-left-side">
+              <Dropzone onDrop={this.onDrop}>
+                {({getRootProps, getInputProps}) => (
+                  <section className={'container ' + (this.state.dropBoxIsHidden ? 'hidden' : '')}>
+                    <div {...getRootProps({className: 'dropzone'})}>
+                      <input {...getInputProps()} />
+                      <p>{t('prediction.dropzonehelper')}</p>
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
+              <div className={'preview-file ' + (this.state.fileIsHidden ? 'hidden' : '')}>
+                <p>{this.state.file.name}
                   <span className="remove-file" onClick={this.removeFile}></span>
-                </div>
+                </p>
               </div>
-              <div className="input-right-side">
-                <Form.Group controlId="formBasicFile">
-                  <Form.Control 
-                    type="email" 
-                    placeholder={t('prediction.titleplaceholder')}
-                    name='email' 
-                    value={this.state.predictionTitle}
-                    onChange={this.handleInputChange}
-                    required
-                  />
-                  <Form.Text className="text-muted">
-                    {t('prediction.predictiontitlehelp')}
-                  </Form.Text>
-                </Form.Group>
-              </div>  
             </div>
+            <div className="input-right-side">
+              <Form.Group controlId="formBasicFile">
+                <Form.Control 
+                  type="email" 
+                  placeholder={t('prediction.titleplaceholder')}
+                  name='email' 
+                  value={this.state.predictionTitle}
+                  onChange={this.handleInputChange}
+                  required
+                />
+                <Form.Text className="text-muted prediction-info">
+                  {t('prediction.predictiontitlehelp')}
+                </Form.Text>
+              </Form.Group>
+            </div>
+          </div>
+          <hr />
+          
+          <span className="text-muted prediction-info">{t('prediction.submitpredictioninfo')}</span>
+          <br />
+          <Button className={'btn btn-primary btn-prediction ' + (this.state.successfulUpload ? '' : 'disabled')} onClick={this.startPrediction}>
+            {t('prediction.submitprediction')}
+          </Button>
           
         </div>
       </div>

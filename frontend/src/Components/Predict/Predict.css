@@ -28,7 +28,7 @@
 }
 
 .dropzone:focus {
-    border-color: #6a7989;
+  border-color: #6a7989;
 }
 
 .hidden {
@@ -62,4 +62,28 @@
 
 .remove-file:before {
   content: "\2716";
+}
+
+.remove-file {
+  margin-left: 1em;
+  cursor: pointer;
+}
+
+.remove-file:hover {
+  color: maroon;
+  transition: all 0.5s;
+}
+
+.prediction-info {
+  font-size: 11pt;
+}
+
+.btn-prediction.disabled {
+  cursor: default;
+}
+
+.btn-prediction.disabled:focus {
+    background-color: #ff0000;
+    border-color: #e82121;
+    box-shadow: 0 0 0 0.2rem rgba(243, 0, 0, 0.5)
 }

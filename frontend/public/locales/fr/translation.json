@@ -66,6 +66,8 @@
     "header": "Submit a new prediction",
     "titleplaceholder": "Enter a title for your prediction",
     "predictiontitlehelp": "This will be shown in the public queue.",
-    "dropzonehelper": "Click here to open a menu or drag your file into this area"
+    "dropzonehelper": "Click here to open a menu or drag your file into this area",
+    "submitpredictioninfo": "You are not able to submit a prediction until your file has finished uploading.",
+    "submitprediction": "Submit prediction"
   }
 }

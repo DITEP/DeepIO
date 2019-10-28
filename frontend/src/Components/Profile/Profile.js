@@ -38,12 +38,6 @@ class Profile extends React.Component {
 
   async componentDidMount() {
     this.apiClient = new APIClient();
-
-    /*this.apiClient.getUser(newUser).then((data) =>
-      this.setState({
-        profile: data
-      })
-    )*/
   }
 
   handleInputChange = (event) => {
@@ -161,7 +155,7 @@ class Profile extends React.Component {
 
           <div className="profile-settings-box"> 
             <div className={'change-profile-header ' +  (this.state.isEmailOpen ? 'active' : '')}>
-              <a className="change-profile-link" onClick={this.openChangeEmail}>{t('profile.changemail')}</a>
+              <div className="change-profile-link" onClick={this.openChangeEmail}>{t('profile.changemail')}</div>
             </div>
             <div className={'change-setting-container ' +  (this.state.isEmailOpen ? 'col' : 'hidden')}>
               <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitEmail}>
@@ -185,7 +179,7 @@ class Profile extends React.Component {
           
           <div className="profile-settings-box"> 
             <div className={'change-profile-header ' +  (this.state.isPasswordOpen ? 'active' : '')}>
-              <a className="change-profile-link" onClick={this.openChangePassword}>{t('profile.changepassword')}</a>
+              <div className="change-profile-link" onClick={this.openChangePassword}>{t('profile.changepassword')}</div>
             </div>
             <div className={'change-setting-container ' +  (this.state.isPasswordOpen ? 'col' : 'hidden')}>
               <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitPassword}>
