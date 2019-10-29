@@ -69,5 +69,9 @@
     "dropzonehelper": "Click here to open a menu or drag your file into this area",
     "submitpredictioninfo": "You are not able to submit a prediction until your file has finished uploading.",
     "submitprediction": "Submit prediction"
+  },
+  "history": {
+    "explanationtab": "Explanation",
+    "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the nams to get moe information about them!"
   }
 }

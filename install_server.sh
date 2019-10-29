@@ -13,7 +13,7 @@ mkdir backend/venv
     deactivate
 }
 
-activate
+source backend/venv/bin/activate
 
 pip install -r install.txt
 

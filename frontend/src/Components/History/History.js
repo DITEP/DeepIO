@@ -9,6 +9,7 @@ import Tab from 'react-bootstrap/Tab';
 import Table from 'react-bootstrap/Table';
 
 import i18n from "i18next";
+import { withTranslation } from 'react-i18next';
 
 class History extends React.Component {
   constructor(props) {
@@ -44,8 +45,16 @@ class History extends React.Component {
       } 
 		})  
 	}
-
-  createItems(item) {
+  
+  createTabs(item) {
+    return (    
+      <ListGroup.Item action eventKey={item._id}>
+        {item.jobName}
+      </ListGroup.Item>
+    )
+  }
+  
+  createCols(item) {
     function convertTime(time) {
       let date = new Date(time.$date*1000);
       let hours = date.getHours();
@@ -56,69 +65,60 @@ class History extends React.Component {
 
     let startTime = new Date(item.timeStarted.$date);
     let endTime = new Date(item.timeEnded.$date);
-
+    
     return (    
-      <Row key={item._id}>
-        <Col sm={4}>   
-          <ListGroup.Item action eventKey={item._id}>
-            {item.jobName}
-          </ListGroup.Item>
-        </Col>
-        <Col sm={8}>
-          <Tab.Content>
-            <Tab.Pane eventKey={item._id}>
-              <Table striped bordered hover className="prediction-info">
-                <tbody>
-                  <tr>
-                    <td> Prediction started: </td> 
-                    <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
-                  </tr>
-                  <tr>
-                    <td> Prediction finished: </td> 
-                    <td> {endTime.toLocaleTimeString() + ' ' + endTime.toLocaleDateString()} </td>
-                  </tr>
-                  <tr>
-                    <td> Result: </td> 
-                    <td> {item.result} </td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Tab.Pane>
-          </Tab.Content>
-        </Col>
-      </Row>
+      <Tab.Pane eventKey={item._id}>
+        <Table striped bordered hover className="prediction-info">
+          <tbody>
+            <tr>
+              <td> Prediction started: </td> 
+              <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
+            </tr>
+            <tr>
+              <td> Prediction finished: </td> 
+              <td> {endTime.toLocaleTimeString() + ' ' + endTime.toLocaleDateString()} </td>
+            </tr>
+            <tr>
+              <td> Result: </td> 
+              <td> {item.result} </td>
+            </tr>
+          </tbody>
+        </Table>
+      </Tab.Pane>  
     )
   }
 
   render() {
+    const { t } = this.props;
+    
     if (!this.state.isFetchingData) {
       var historyEntries = this.state.profile.submittedJobs;
-      var listItems = historyEntries.map(this.createItems);
+      
+      var tabs = historyEntries.map(this.createTabs);
+      var cols = historyEntries.map(this.createCols);
     }
+    
     return (
       <div className="container">
         <div className="container-fluid">
         
           <Tab.Container id="list-group-tabs-example" defaultActiveKey="explanation">
-          
             <Row key="Explanation">
               <Col sm={4}>   
                 <ListGroup.Item action eventKey="explanation">
-                  Explanation
+                  {t('history.explanationtab')}
                 </ListGroup.Item>
+                {tabs}
               </Col>
               <Col sm={8}>
                 <Tab.Content>
                   <Tab.Pane eventKey="explanation">
-                    The tabs on the left side of the screen are the names of all the predictions that you have started so far. 
-                    Click on the nams to get moe information about them!
+                    {t('history.explanationcontent')}
                   </Tab.Pane>
+                  {cols}
                 </Tab.Content>
               </Col>
             </Row>
-          
-          
-            {listItems}
           </Tab.Container>
         
         </div>
@@ -126,4 +126,4 @@ class History extends React.Component {
     )
   }
 }
-export default withRouter(History);
+export default withRouter(withTranslation()(History));
