@@ -57,7 +57,7 @@ def userControl():
 
 @routes.route('/changeEmail', methods = ['PUT'])
 @jwt_required
-def changeEmail():
+def changeEmail(): 
     return user.changeEmail()
 
 @routes.route('/checkPassword', methods = ['POST'])

@@ -55,14 +55,6 @@ class History extends React.Component {
   }
   
   createCols(item) {
-    function convertTime(time) {
-      let date = new Date(time.$date*1000);
-      let hours = date.getHours();
-      let minutes = "0" + date.getMinutes();
-      let seconds = "0" + date.getSeconds();
-      return (hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2));
-    }
-
     let startTime = new Date(item.timeStarted.$date);
     let endTime = new Date(item.timeEnded.$date);
     

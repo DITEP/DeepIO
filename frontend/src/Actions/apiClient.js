@@ -38,11 +38,11 @@ class APIClient {
     return this.performRefresh('post', '/refresh');
   }
 
-  changeEmail() {
-    return this.perform('put', '/changeEmail');  
+  changeEmail(email) {
+    return this.perform('put', '/changeEmail', email);  
   }
   
-  checkPassword(oldPassword) {console.log(oldPassword)
+  checkPassword(oldPassword) {
     return this.perform('post', '/checkPassword', oldPassword);  
   }
   

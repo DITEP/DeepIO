@@ -55,7 +55,7 @@ class Register extends React.Component {
       return;
     }
     
-    if (this.state.password.length < 8) { // Maybe also uppercase and special chars?
+    if (this.state.password.length < 10) {
       this.setState({
         passwordSecurityError: true
       })
@@ -136,7 +136,7 @@ class Register extends React.Component {
                 <p className={'password-error ' + (this.state.emailAlreadyUsed ? 'show' : 'hidden')}>
                   {t('register.emailtakenerror')}
                 </p>
-                <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
+                <p className={'password-error ' + (this.state.otherError ? 'show' : 'hidden')}>
                   {t('register.othererror')} 
                 </p>                
               </Form.Group>

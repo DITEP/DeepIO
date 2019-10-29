@@ -14,13 +14,17 @@ class Profile extends React.Component {
 		this.state = {
       profile: {},
       email: '',
+      emailRepeat: '',
       oldPassword: '',
       password: '',
       passwordRepeat: '',
       oldPasswordWrong: false,
       passwordMismatch: false,
+      hasSpecialChars: false,
+      hasUppercaseChars: false,      
       passwordSecurityError: false,
       emailAlreadyUsed: false,
+      emailMismatch: false,
       otherError: false,
 
       isPasswordOpen: false,
@@ -72,13 +76,27 @@ class Profile extends React.Component {
   onSubmitEmail = (event) => {
     event.preventDefault();
     this.resetIndicators();
-
-    this.apiClient.changeEmail(this.state.email)
-    .then(res => {
+    
+    if (this.state.email !== this.state.emailRepeat) {
       this.setState({
-        emailChangeSuccess: true
+        emailMismatch: true
       })
-    }).catch((err) => {
+      return;
+    }
+    
+    this.apiClient.changeEmail({'email': this.state.email})
+      .then(res => {
+        this.apiClient.logout()
+      })
+      .then(res => {
+        const location = {
+          pathname: '/login',
+          state: { message: i18n.t('messages.emailchangesuccess') }
+        }    
+        this.props.history.push(location)
+
+        window.location.reload();
+      }).catch((err) => { console.log(err)
         if (err.response.status === 409) {
           this.setState({
             emailAlreadyUsed: true
@@ -95,12 +113,8 @@ class Profile extends React.Component {
   onSubmitPassword = (event) => {
     event.preventDefault();
     this.resetIndicators();
-
-    if (this.state.oldPassword !== true) { // TODO: Check against password in db, show error or pass
-      console.log('show message');
-    }
     
-    if (this.state.password.length < 8) { // Maybe also uppercase and special chars?
+    if (this.state.password.length < 10) {
       this.setState({
         passwordSecurityError: true
       })
@@ -169,7 +183,20 @@ class Profile extends React.Component {
                     onChange={this.handleInputChange}
                     required
                   />
+                  <Form.Label>{t('profile.emailrepeatinput')}</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder={t('profile.emailrepeatplaceholder')}
+                    name='emailRepeat'
+                    value={this.state.emailRepeat}
+                    onChange={this.handleInputChange}
+                    required
+                  />
+                  <Form.Text className="text-muted emailchange-info">
+                    {t('profile.emailchangeinfo')}
+                  </Form.Text>
                 </Form.Group>
+                
                 <Button variant="primary" type="submit" className="submit-profile-change">
                   {t('profile.changemailsubmit')}
                 </Button>
@@ -216,21 +243,24 @@ class Profile extends React.Component {
               </Form>
             </div>
           </div>
-          
+
+          <p className={'password-error ' + (this.state.emailMismatch ? 'show' : 'hidden')}>
+            {t('profile.emailmismatcherror')}
+          </p>          
           <p className={'password-error ' + (this.state.emailAlreadyUsed ? 'show' : 'hidden')}>
-            {t('profile.emailusederror')} This email address is already taken.
+            {t('profile.emailusederror')}
           </p>
           <p className={'password-error ' + (this.state.oldPasswordWrong ? 'show' : 'hidden')}>
-            {t('profile.oldpasswordwrongerror')} Your old password is incorrect.
+            {t('profile.oldpasswordwrongerror')}
           </p>          
           <p className={'password-error ' + (this.state.passwordMismatch ? 'show' : 'hidden')}>
-            {t('profile.passwordmismatcherror')} Passwords must match!
+            {t('profile.passwordmismatcherror')}
           </p>
           <p className={'password-error ' + (this.state.passwordSecurityError ? 'show' : 'hidden')}>
-            {t('profile.passwordnotsecureerror')} Password not secure enough!
+            {t('profile.passwordnotsecureerror')}
           </p>
           <p className={'password-error ' + (this.state.otherError ? 'show' : 'hidden')}>
-            {t('profile.othererror')} Your request could not be progressed. Please try again later.
+            {t('profile.othererror')}
           </p>
 
         </div>

@@ -58,20 +58,20 @@ def changePassword():
     data = request.get_json()
     try:
       data['password'] = flask_bcrypt.generate_password_hash(data['password'])
-      print(current_user['email'], data['password'])
       currentUser = mongo.db.users.update_one({'email': current_user['email']}, {'$set': {'password': data['password']}}, upsert=False)
       return jsonify({'ok': True, 'message': 'Email updated successfully!'}), 200
     except:
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
     
 def changeEmail():
-    data = validate_user(request.get_json())
-    if data['ok']:
-      data = data['data']
-      userExists = mongo.db.users.find_one({'email': data['newEmail']})
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    try:
+      userExists = mongo.db.users.find_one({'email': data['email']})
       if not userExists:
-        currentUser = mongo.db.users.update_one({'email': data['email']}, {'$set': {'email': data['newEmail']}}, upsert=False)
+        currentUser = mongo.db.users.update_one({'email': current_user['email']}, {'$set': {'email': data['email']}}, upsert=False)
         return jsonify({'ok': True, 'message': 'Email updated successfully!'}), 200
       else:
         return jsonify({'ok': False, 'message': 'User exists parameters!'}), 409
-    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+    except:
+      return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400

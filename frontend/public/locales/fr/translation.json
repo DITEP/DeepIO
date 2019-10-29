@@ -28,6 +28,8 @@
     "changemail": "Change email address",
     "emailinput": "New email address",
     "emailplaceholder": "Type in your new email address",
+    "emailrepeatinput": "Repeat email address",
+    "emailrepeatplaceholder": "Please type your new email again",
     "changemailsubmit": "Submit",
     "changepassword": "Change passwod",
     "oldpassword": "Current password",
@@ -37,11 +39,13 @@
     "repeatpassword": "Repeat password",
     "repeatpasswordplaceholder": "Please repat your new password",
     "changepasswordsubmit": "Submit",
+    "emailmismatcherror": "The two email addresses are not the same.",
     "emailusederror": "The email address is already taken.",
     "oldpasswordwrongerror": "Your current password was incorrect.",
     "passwordmismatcherror": "Your new password and the repeated password are not the same!",
-    "passwordnotsecureerror": "Your new password is not secure enough",
-    "othererror": "An error occured. Please try again later."
+    "passwordnotsecureerror": "Password must be at least 10 characters.",
+    "othererror": "An error occured. Please try again later.",
+    "emailchangeinfo": "Please note that you will need to use you new email address to sign into your account"
   },
   "register": {
     "emailaddress": "Email address",
@@ -52,7 +56,7 @@
     "repeatpassword": "Repeat password",
     "repeatpasswordplaceholder": "Type in your new password once again",
     "passwordmismatcherror": "Your two passwords are not the same,",
-    "passwordinsecureerror": "Your password is not really secure.",
+    "passwordinsecureerror": "Password must be at least 10 characters.",
     "emailtakenerror": "The email you want to ue is already taken",
     "othererror": "Somthing went wrong. Try again later.",
     "submitbutton": "Submit",
@@ -60,6 +64,7 @@
   },
   "messages": {
     "passwordchangesuccess": "Your password has been changed. Please log back in with your new credentials.",
+    "emailchangesuccess": "Your email has been changed. Please log back in with your new credentials.",
     "notauthorized": "You have to be logged in to view this page."
   },
   "prediction": {
