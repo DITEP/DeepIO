@@ -36,6 +36,7 @@ def getUserDetails():
     user = {}
     data = (list(data))[0]
     user['email'] = data['email']
+    user['name'] = data['name']
     user['submittedJobs'] = data['submittedJobs']
             
     if data:

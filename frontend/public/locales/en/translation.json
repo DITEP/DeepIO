@@ -31,7 +31,7 @@
     "emailrepeatinput": "Repeat email address",
     "emailrepeatplaceholder": "Please type your new email again",
     "changemailsubmit": "Submit",
-    "changepassword": "Change passwod",
+    "changepassword": "Change password",
     "oldpassword": "Current password",
     "oldpasswordplaceholder": "Please type in your current password",
     "newpassword": "New password",
@@ -51,21 +51,25 @@
     "emailaddress": "Email address",
     "emailplaceholder": "Type in the email address you wish to use",
     "emailhelper": "We'll never share your email with anyone else.",
+    "name": "Your full name",
+    "nameplaceholder": "Please type your full name here",
+    "namehelper": "We will use your name for display purposes",
     "password": "Password",
-    "passwordplaceholder": "Type in wyour new password",
+    "passwordplaceholder": "Type in your new password",
     "repeatpassword": "Repeat password",
     "repeatpasswordplaceholder": "Type in your new password once again",
     "passwordmismatcherror": "Your two passwords are not the same,",
     "passwordinsecureerror": "Password must be at least 10 characters.",
     "emailtakenerror": "The email you want to ue is already taken",
-    "othererror": "Somthing went wrong. Try again later.",
+    "othererror": "Something went wrong. Try again later.",
     "submitbutton": "Submit",
-    "loginlinkbottom": ""
+    "loginlinkbottom": "Already have an account? Click here to log in!"
   },
   "messages": {
     "passwordchangesuccess": "Your password has been changed. Please log back in with your new credentials.",
     "emailchangesuccess": "Your email has been changed. Please log back in with your new credentials.",
-    "notauthorized": "You have to be logged in to view this page."
+    "notauthorized": "You have to be logged in to view this page.",
+    "registrationsuccess": "Your account has been created! Please log in with your credentials."
   },
   "prediction": {
     "header": "Submit a new prediction",

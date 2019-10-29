@@ -1,10 +1,12 @@
 import React from "react";
+import {withRouter} from 'react-router';
 import './Register.css';
 import APIClient from '../../Actions/apiClient';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import i18n from "i18next";
 import { withTranslation } from 'react-i18next';
 
 class Register extends React.Component {
@@ -12,6 +14,7 @@ class Register extends React.Component {
 		super();
 		this.state = {
       email: '',
+      name: '',
       password: '',
       passwordRepeat: '',
       passwordMismatch: false,
@@ -64,12 +67,20 @@ class Register extends React.Component {
     
     let newUser = {
       email: this.state.email,
+      name: this.state.name,
       password: this.state.password
     }
     
-    this.apiClient.createUser(newUser).then((data) =>
-      console.log('user created!')
-    ).catch((err) => {
+    this.apiClient.createUser(newUser).then((data) => {
+      const location = { 
+    	  pathname: '/login', 
+    		state: { 
+    		  from: '/', 
+    			message: i18n.t('messages.registrationsuccess') 
+    		} 
+    	} 
+      this.props.history.push(location); 
+    }).catch((err) => {
         if (err.response.status === 409) {
           this.setState({
             emailAlreadyUsed: true
@@ -103,6 +114,21 @@ class Register extends React.Component {
                 />
                 <Form.Text className="text-muted">
                   {t('register.emailhelper')}
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Label>{t('register.name')}</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  placeholder={t('register.nameplaceholder')}
+                  name='name'
+                  value={this.state.name}
+                  onChange={this.handleInputChange}
+                  required
+                />
+                <Form.Text className="text-muted">
+                  {t('register.namehelper')}
                 </Form.Text>
               </Form.Group>
             
@@ -154,4 +180,4 @@ class Register extends React.Component {
       );
     }
 }
-export default withTranslation()(Register);
+export default withRouter(withTranslation()(Register));

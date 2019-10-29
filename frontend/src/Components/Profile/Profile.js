@@ -12,6 +12,7 @@ class Profile extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+      isFetchingData: true,
       profile: {},
       email: '',
       emailRepeat: '',
@@ -42,7 +43,29 @@ class Profile extends React.Component {
 
   async componentDidMount() {
     this.apiClient = new APIClient();
-  }
+
+    this.apiClient.getAuth().then((data) => {
+      this.apiClient.getUserDetails(data.logged_in_as.email).then((data) => {
+        this.setState({
+          isFetchingData: false,
+          profile: data
+        })
+      })
+    }).catch((err) => { 
+  		if (err.response.status) {
+        if (err.response.status === 401) {
+    			const location = { 
+    				pathname: '/login', 
+    				state: { 
+    					from: 'Profile', 
+    					message: i18n.t('messages.notauthorized') 
+    				} 
+    			} 
+    			this.props.history.push(location) 
+   		  }
+      } 
+		})  
+	}
 
   handleInputChange = (event) => {
     const { value, name } = event.target;
@@ -166,14 +189,16 @@ class Profile extends React.Component {
     return (
       <div className="container">
         <div className="container-fluid">
-
+        
+        <h2 className="profile-greeting">Hello, {this.state.profile.name}</h2>
+        
           <div className="profile-settings-box"> 
             <div className={'change-profile-header ' +  (this.state.isEmailOpen ? 'active' : '')}>
               <div className="change-profile-link" onClick={this.openChangeEmail}>{t('profile.changemail')}</div>
             </div>
             <div className={'change-setting-container ' +  (this.state.isEmailOpen ? 'col' : 'hidden')}>
               <Form className='email-change-form col-8 col-centered' onSubmit={this.onSubmitEmail}>
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group>
                   <Form.Label>{t('profile.emailinput')}</Form.Label>
                   <Form.Control
                     type="email"

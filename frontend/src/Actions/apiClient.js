@@ -23,11 +23,7 @@ class APIClient {
   getAuth() {
     return this.perform('get', '/hasAuth');
   }
-  
-  getHello() {
-    return this.perform('get', '/hello');
-  }
-  
+   
   logout() {
     this.perform('delete', '/logoutAccessToken').then(() => {
       console.log('done');

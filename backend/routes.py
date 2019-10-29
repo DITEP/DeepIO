@@ -33,12 +33,6 @@ def checkAuth():
 def logoutAccessToken():
     return auth.logout()
 
-
-@routes.route('/hello', methods=['GET'])
-@jwt_required
-def hello():
-  return 'hello'
-
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return auth.checkIfTokenInBlackList(decrypted_token)

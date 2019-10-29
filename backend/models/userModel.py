@@ -9,6 +9,9 @@ user_schema = {
             "type": "string",
             "format": "email"
         },
+        "name": {
+            "type": "string"
+        },
         "password": {
             "type": "string",
             "minLength": 5
