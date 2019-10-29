@@ -7,15 +7,8 @@ const client = axios.create({
  json: true
 });
 
-class APIClient {  
-  createUser(newUser) { console.log(newUser);
-    return this.perform('post', '/user', newUser);
-  }
- 
-  getUser(user) { console.log(user);
-   return this.perform('get', '/user', user);
-  }
-
+class APIClient {
+  /*** ///  Maps to auth controller  ///***/  
   login(user) {
     return this.perform('post', '/login', user);
   }
@@ -34,6 +27,19 @@ class APIClient {
     return this.performRefresh('post', '/refresh');
   }
 
+  /*** ///  Maps to user controller  ///***/
+  createUser(newUser) {
+    return this.perform('post', '/user', newUser);
+  }
+ 
+  getUser(user) {
+   return this.perform('get', '/user', user);
+  }
+  
+  updateUserHistory(predictionID) {
+    return this.perform('put', '/updateUserHistory', predictionID);
+  }
+  
   changeEmail(email) {
     return this.perform('put', '/changeEmail', email);  
   }
@@ -48,6 +54,11 @@ class APIClient {
 
   getUserDetails(email) {
     return this.perform('get', '/user?email=' + email);
+  }
+
+  /*** ///  Maps to prediction controller  ///***/
+  createPrediction(prediction) {
+    return this.perform('post', '/prediction', prediction);
   }
 
   async perform (method, resource, data) {

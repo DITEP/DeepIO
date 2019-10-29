@@ -4,7 +4,7 @@ from application import flask_bcrypt
 from models.userModel import validate_user
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 get_jwt_identity, get_raw_jwt)
-from bson import json_util
+from bson import json_util, ObjectId
 import controllers.errors
 
 # Try to find email address in database. If it is unique, make new user. Otherwise send error message
@@ -42,6 +42,18 @@ def getUserDetails():
     if data:
       return json_util.dumps(user), 200
     return jsonify({'ok': False, 'message': 'No user!'}), 400
+
+def updateUserHistory():
+  try:
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    user = mongo.db.users.find_one({'email': current_user['email']})
+    predictionID = ObjectId(data['predictionID'])
+    mongo.db.users.update_one({'email': current_user['email']}, {"$addToSet": {"history": predictionID}})
+    return jsonify({'ok': True, 'message': 'User successfully updated.'}), 200
+  except:
+     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+    
 
 def checkPassword():
   try:

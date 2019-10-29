@@ -3,7 +3,7 @@ from flask_jwt_extended import (jwt_required, jwt_refresh_token_required, get_jw
 
 import controllers.auth as auth
 import controllers.user as user
-#import controllers.job as job
+import controllers.predict as prediction
 import controllers.queue as queue
 from application import jwt
 
@@ -63,23 +63,30 @@ def checkPassword():
 @jwt_required
 def changePassword():
     return user.changePassword()
+
+@routes.route('/updateUserHistory', methods = ['PUT'])
+@jwt_required
+def updateUserHistory():
+    return user.updateUserHistory()    
+    
 ###
 
 ### Job
 
 # Get, create, update, delete a single job
-'''
-@routes.route('/job', methods = ['POST', 'GET', 'PUT', 'DELETE'])
-def jobControl():
+
+@routes.route('/prediction', methods = ['POST', 'GET', 'PUT', 'DELETE'])
+@jwt_required
+def predictionControl():
     if request.method == 'POST':
-        job.createJob()
+        return prediction.createPrediction()
     if request.method == 'GET':
-        job.getJob()
+        return prediction.getPrediction()
     if request.method == 'PUT':
-        job.updateJob()
+        return prediction.updatePrediction()
     if request.method == 'DELETE':
-        job.deleteJob()
-'''        
+        return prediction.deletePrediction()
+        
 ###
 
 ### Queue

@@ -15,6 +15,8 @@ class Predict extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
+      userMail: '',
+      predictionTitle: '',
       dropBoxIsHidden: false,
       fileIsHidden: true,
       file: {},
@@ -42,17 +44,23 @@ class Predict extends React.Component {
   async componentDidMount() {
     this.apiClient = new APIClient();
     
-    this.apiClient.getAuth().then((data) =>
-      console.log(data)
-    ).catch((err) => {
-      if (err.response.status) {          
-        const location = {
-          pathname: '/login',
-          state: { from: 'Predict', message: i18n.t('messages.notauthorized')}
-        }
-    
-        this.props.history.push(location)
-      }
+    this.apiClient.getAuth().then((data) => {
+      this.setState({
+        userMail: data.logged_in_as.email
+      })
+    }).catch((err) => {
+  		if (err.response.status) {
+        if (err.response.status === 401) {
+    			const location = { 
+    				pathname: '/login', 
+    				state: { 
+    					from: 'Predict', 
+    					message: i18n.t('messages.notauthorized') 
+    				} 
+    			} 
+    			this.props.history.push(location) 
+   		  }
+      } 
     })
   }
   
@@ -111,6 +119,13 @@ class Predict extends React.Component {
     })
   }
   
+  handleInputChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({
+      [name]: value
+    });
+  }  
+  
   removeFile() {
     this.setState({
       fileIsHidden: true,
@@ -120,9 +135,32 @@ class Predict extends React.Component {
   }
   
   startPrediction() {
-    if (this.state.successfulUpload) {
-      /* ... */
+    if (!this.state.file) { console.log('a')
+      return;
     }
+    
+    if (!this.state.predictionTitle) { console.log('b')
+      return;
+    }
+    
+    if (!this.state.userMail) { console.log('c')
+      return;
+    }
+    
+    let prediction = {
+      "submittedBy": this.state.userMail,
+      "predictionTitle": this.state.predictionTitle,
+      "storedAt": this.state.file.path
+    }
+    
+    this.apiClient.createPrediction(prediction).then((data) => {
+      this.apiClient.updateUserHistory({"predictionID": data.data}).then((data) => {
+        console.log(data);
+      })
+      if (this.state.successfulUpload) {
+        /* ... */
+      }
+    })
   }
 
 
@@ -155,9 +193,9 @@ class Predict extends React.Component {
             <div className="input-right-side">
               <Form.Group controlId="formBasicFile">
                 <Form.Control 
-                  type="email" 
+                  type="text" 
                   placeholder={t('prediction.titleplaceholder')}
-                  name='email' 
+                  name='predictionTitle' 
                   value={this.state.predictionTitle}
                   onChange={this.handleInputChange}
                   required
