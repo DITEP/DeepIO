@@ -1,2 +1,5 @@
 backend/venv
 db_config.txt
+backend/__pycache__
+backend/controllers/__pycache__
+backend/models/__pycache__
