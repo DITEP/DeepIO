@@ -16,7 +16,8 @@ class History extends React.Component {
 		super(props);
 		this.state = {
       isFetchingData: true,
-      profile: {}
+      profile: {},
+      predictionIsFinished: false
     }
   }
 
@@ -48,18 +49,30 @@ class History extends React.Component {
   
   createTabs(item) {
     return (    
-      <ListGroup.Item action eventKey={item._id}>
-        {item.jobName}
+      <ListGroup.Item action eventKey={item._id.$oid} key={item._id.$oid}>
+        {item.predictionTitle}
       </ListGroup.Item>
     )
   }
   
   createCols(item) {
     let startTime = new Date(item.timeStarted.$date);
-    let endTime = new Date(item.timeEnded.$date);
+    
+    var endTime = i18n.t('history.predictionrunning');
+    
+    if (item.timeEnded) {
+      let timeEnded = new Date(item.timeEnded.$date);
+      endTime = timeEnded.toLocaleTimeString() + ' ' + timeEnded.toLocaleDateString()
+    }
+    
+    var result = i18n.t('history.noresult');
+    
+    if (item.result) {
+      result = item.result
+    }
     
     return (    
-      <Tab.Pane eventKey={item._id}>
+      <Tab.Pane eventKey={item._id.$oid} key={item._id.$oid}>
         <Table striped bordered hover className="prediction-info">
           <tbody>
             <tr>
@@ -68,11 +81,11 @@ class History extends React.Component {
             </tr>
             <tr>
               <td> Prediction finished: </td> 
-              <td> {endTime.toLocaleTimeString() + ' ' + endTime.toLocaleDateString()} </td>
+              <td> {endTime} </td>
             </tr>
             <tr>
               <td> Result: </td> 
-              <td> {item.result} </td>
+              <td> {result} </td>
             </tr>
           </tbody>
         </Table>
