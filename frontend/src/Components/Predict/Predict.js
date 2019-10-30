@@ -5,7 +5,6 @@ import APIClient from '../../Actions/apiClient';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-
 import Dropzone from 'react-dropzone';
 
 import { withTranslation } from 'react-i18next';
@@ -24,6 +23,9 @@ class Predict extends React.Component {
       uploadProgress: 0,
       successfulUpload: false,
       uploading: false,
+      fileError: false,
+      titleError: false,
+      otherError: false
     }
     this.onDrop = (files) => {
       this.setState({file: files[0]});
@@ -39,6 +41,8 @@ class Predict extends React.Component {
     this.uploadFiles = this.uploadFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.startPrediction = this.startPrediction.bind(this);
+    this.resetIndicators = this.resetIndicators.bind(this);
+    this.isEmpty = this.isEmpty.bind(this);
   }
 
   async componentDidMount() {
@@ -98,6 +102,15 @@ class Predict extends React.Component {
     });
   }
   
+  isEmpty(obj) {
+    for(var prop in obj) {
+      if(obj.hasOwnProperty(prop)) {
+        return false;
+      }
+    }
+    return JSON.stringify(obj) === JSON.stringify({});
+  }
+  
   uploadFiles(file) {
     return new Promise((resolve, reject) => {
   
@@ -135,15 +148,26 @@ class Predict extends React.Component {
   }
   
   startPrediction() {
-    if (!this.state.file) {
+    this.resetIndicators();
+
+    if (this.isEmpty(this.state.file)) {
+      this.setState({
+        fileError: true
+      })
       return;
     }
-    
+
     if (!this.state.predictionTitle) {
+      this.setState({
+        titleError: true
+      })
       return;
     }
     
     if (!this.state.userMail) {
+      this.setState({
+        otherError: true
+      })
       return;
     }
     
@@ -156,12 +180,26 @@ class Predict extends React.Component {
     this.apiClient.createPrediction(prediction).then((data) => {
       this.apiClient.updateUserHistory({"predictionID": data.data}).then((data) => {
         this.apiClient.createQueueItem(data.data).then((data) => {
-          console.log(data);
+   			  const location = { 
+    				pathname: '/queue', 
+    				state: { 
+    					from: 'Predict', 
+    					message: i18n.t('messages.newpredictionsuccess')
+    				} 
+    			} 
+    			this.props.history.push(location) 
         }).catch((err) => {})
       }).catch((err) => {})
     }).catch((err) => {})
   }
 
+  resetIndicators() {
+    this.setState ({
+      fileError: false,
+      titleError: false,
+      otherError: false
+    })
+  }
 
 	render () {
     const { t } = this.props;
@@ -202,11 +240,22 @@ class Predict extends React.Component {
                 <Form.Text className="text-muted prediction-info">
                   {t('prediction.predictiontitlehelp')}
                 </Form.Text>
+                
               </Form.Group>
             </div>
           </div>
           <hr />
           
+          <p className={'prediction-error ' + (this.state.fileError ? 'show' : 'hidden')}>
+            {t('prediction.fileisempty')} 
+          </p>                
+          <p className={'prediction-error ' + (this.state.titleError ? 'show' : 'hidden')}>
+            {t('prediction.titleisempty')}  
+          </p>
+          <p className={'prediction-error ' + (this.state.otherError ? 'show' : 'hidden')}>
+            {t('prediction.othererror')}
+          </p>
+                
           <span className="text-muted prediction-info">{t('prediction.submitpredictioninfo')}</span>
           <br />
           <Button className={'btn btn-primary btn-prediction ' + (this.state.successfulUpload ? '' : 'disabled')} onClick={this.startPrediction}>

@@ -130,10 +130,10 @@ class History extends React.Component {
       <div className="container">
         <div className="container-fluid">
         
-          <Form.Group controlId="formBasicFile">
+          <Form.Group controlId="formBasicFile" className="col-6">
             <Form.Control 
               type="text" 
-              placeholder={t('prediction.titleplaceholder')}
+              placeholder={t('history.searchbar')}
               name='searchField' 
               value={this.state.searchField}
               onChange={this.handleInputChange}

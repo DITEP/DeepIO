@@ -69,7 +69,8 @@
     "passwordchangesuccess": "Your password has been changed. Please log back in with your new credentials.",
     "emailchangesuccess": "Your email has been changed. Please log back in with your new credentials.",
     "notauthorized": "You have to be logged in to view this page.",
-    "registrationsuccess": "Your account has been created! Please log in with your credentials."
+    "registrationsuccess": "Your account has been created! Please log in with your credentials.",
+    "newpredictionsuccess": "You successfully submitted a new prediction!"
   },
   "prediction": {
     "header": "Submit a new prediction",
@@ -77,18 +78,23 @@
     "predictiontitlehelp": "This will be shown in the public queue.",
     "dropzonehelper": "Click here to open a menu or drag your file into this area",
     "submitpredictioninfo": "You are not able to submit a prediction until your file has finished uploading.",
-    "submitprediction": "Submit prediction"
+    "submitprediction": "Submit prediction",
+    "fileisempty": "You need to upload a file in order to start a prediction.",
+    "titleisempty": "You can not submit a new prediction without a title.",
+    "othererror": "Somthing went wrong. Please try again later."
   },
   "history": {
     "predictionrunning": "Prediction is running",
     "noresult": "To be determined",
     "explanationtab": "Explanation",
-    "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the nams to get moe information about them!"
+    "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the nams to get moe information about them!",
+    "searchbar": "Type to filter by prediction title"
   },
   "queue": {
-  "tableTitle": "Prediction Title",
-  "tableName": "Submitted By",
-  "tableStarted": "Time Started",
-  "tableRuntime": "Running For"
+    "tabletitle": "Prediction Title",
+    "tablename": "Submitted By",
+    "tablestarted": "Time Started",
+    "tableruntime": "Running For",
+    "queueempty": "The queue is currently empty."
   }
 }
