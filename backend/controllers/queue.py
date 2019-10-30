@@ -36,7 +36,8 @@ def getQueue():
         {"$project": {"user.name": 1, "prediction.predictionTitle": 1, "prediction.timeStarted": 1}},
       ]
     )
-    return json_util.dumps(queue), 200
+    queue = json_util.dumps(queue)
+    return queue, 200
   except:
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'}), 400
 

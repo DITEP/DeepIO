@@ -2,7 +2,9 @@ import React from "react";
 import {withRouter} from 'react-router';
 import './Queue.css';
 import APIClient from '../../Actions/apiClient';
+
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 
 import i18n from "i18next";
 import { withTranslation } from 'react-i18next';
@@ -11,7 +13,9 @@ class Queue extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
-      queue: []
+      queue: [],
+      searchField: '',
+      isFetchingData: true
     }
   }
 
@@ -19,11 +23,10 @@ class Queue extends React.Component {
     this.apiClient = new APIClient();
 
     this.apiClient.getAuth().then((data) =>
-      this.apiClient.getQueue().then((data) => { console.log(data)
-        
+      this.apiClient.getQueue().then((data) => {
         this.setState({
+          queue: data,
           isFetchingData: false,
-          queue: data
         })
       }).catch((err) => {})
     ).catch((err) => {
@@ -69,6 +72,7 @@ class Queue extends React.Component {
     return (
       <div className="container">
         <div className="container-fluid">
+
           <Table striped bordered hover className="queue-table">
             <thead>
               <tr>
@@ -82,6 +86,7 @@ class Queue extends React.Component {
               {listItems}
             </tbody>
           </Table>
+          
         </div>
       </div>
     )

@@ -2,11 +2,13 @@ import React from "react";
 import {withRouter} from 'react-router';
 import './History.css';
 import APIClient from '../../Actions/apiClient';
+
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tab from 'react-bootstrap/Tab';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 
 import i18n from "i18next";
 import { withTranslation } from 'react-i18next';
@@ -17,18 +19,22 @@ class History extends React.Component {
 		this.state = {
       isFetchingData: true,
       profile: {},
-      predictionIsFinished: false
+      predictionIsFinished: false,
+      history: {},
+      searchField: ''
     }
+    this.getFilteredList = this.getFilteredList.bind(this);
   }
 
   async componentDidMount() {
     this.apiClient = new APIClient();
 
     this.apiClient.getAuth().then((data) => {
-      this.apiClient.getUserDetails(data.logged_in_as.email).then((data) => {
+      this.apiClient.getUserDetails(data.logged_in_as.email).then((data) => { console.log(data)
         this.setState({
           isFetchingData: false,
-          profile: data
+          profile: data,
+          history: data.submittedJobs
         })
       })
     }).catch((err) => { 
@@ -46,6 +52,23 @@ class History extends React.Component {
       } 
 		})  
 	}
+  
+  getFilteredList(array, key, value) {
+    return array.filter(function(e) {
+      return e[key].includes(value);
+    });
+  }
+  
+  handleInputChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({
+      [name]: value
+    });
+    var filteredList = this.getFilteredList(this.state.profile.submittedJobs, "predictionTitle", value);
+    this.setState({
+      history: filteredList.reverse()
+    });
+  } 
   
   createTabs(item) {
     return (    
@@ -97,7 +120,7 @@ class History extends React.Component {
     const { t } = this.props;
     
     if (!this.state.isFetchingData) {
-      var historyEntries = this.state.profile.submittedJobs;
+      var historyEntries = this.state.history;
       historyEntries = historyEntries.reverse()
       var tabs = historyEntries.map(this.createTabs);
       var cols = historyEntries.map(this.createCols);
@@ -106,6 +129,16 @@ class History extends React.Component {
     return (
       <div className="container">
         <div className="container-fluid">
+        
+          <Form.Group controlId="formBasicFile">
+            <Form.Control 
+              type="text" 
+              placeholder={t('prediction.titleplaceholder')}
+              name='searchField' 
+              value={this.state.searchField}
+              onChange={this.handleInputChange}
+            />
+          </Form.Group>
         
           <Tab.Container id="list-group-tabs-example" defaultActiveKey="explanation">
             <Row key="Explanation">
