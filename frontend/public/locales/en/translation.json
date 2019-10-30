@@ -84,5 +84,11 @@
     "noresult": "To be determined",
     "explanationtab": "Explanation",
     "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the nams to get moe information about them!"
+  },
+  "queue": {
+  "tableTitle": "Prediction Title",
+  "tableName": "Submitted By",
+  "tableStarted": "Time Started",
+  "tableRuntime": "Running For"
   }
 }

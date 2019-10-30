@@ -25,8 +25,20 @@ def createQueueItem():
       print(data)
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
-def getQueueItem():
-  return
+def getQueue():
+  try:
+    queue = mongo.db.queue.aggregate(
+      [
+        {"$lookup": {"from": "users", "foreignField": "_id", "localField": "userID", "as": "user"}},
+        {"$lookup": {"from": "predictions", "foreignField": "_id", "localField": "predictionID", "as": "prediction"}},
+        {"$unwind": "$user"},
+        {"$unwind": "$prediction"},
+        {"$project": {"user.name": 1, "prediction.predictionTitle": 1, "prediction.timeStarted": 1}},
+      ]
+    )
+    return json_util.dumps(queue), 200
+  except:
+    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'}), 400
 
 def updateQueueItem():
   return

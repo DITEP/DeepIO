@@ -98,7 +98,7 @@ class History extends React.Component {
     
     if (!this.state.isFetchingData) {
       var historyEntries = this.state.profile.submittedJobs;
-      
+      historyEntries = historyEntries.reverse()
       var tabs = historyEntries.map(this.createTabs);
       var cols = historyEntries.map(this.createCols);
     }

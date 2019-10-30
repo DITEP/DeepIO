@@ -2,8 +2,10 @@ import React from "react";
 import {withRouter} from 'react-router';
 import './Queue.css';
 import APIClient from '../../Actions/apiClient';
+import Table from 'react-bootstrap/Table';
 
 import i18n from "i18next";
+import { withTranslation } from 'react-i18next';
 
 class Queue extends React.Component {
   constructor(props) {
@@ -17,7 +19,13 @@ class Queue extends React.Component {
     this.apiClient = new APIClient();
 
     this.apiClient.getAuth().then((data) =>
-      console.log(data)
+      this.apiClient.getQueue().then((data) => { console.log(data)
+        
+        this.setState({
+          isFetchingData: false,
+          queue: data
+        })
+      }).catch((err) => {})
     ).catch((err) => {
         if (err.response.status) {
           if (err.response.status === 401) {        
@@ -25,46 +33,58 @@ class Queue extends React.Component {
               pathname: '/login',
               state: { 
                 from: 'Queue', 
-                message: i18n.t('messages.notauthorized') 
+       					message: i18n.t('messages.notauthorized') 
               }
             }      
             this.props.history.push(location)
           }
         }
       })
-
-    /*this.apiClient.getQueue().then((data) =>
-      this.setState({
-        queue: data
-      })
-    ).catch((err) => {
-        if (err.response.status === 401) {
-          return this.props.history.push('/login');
-        }
-      })*/
-    }
+  }
 
   createItems(item) {
+    let startTime = new Date(item.prediction.timeStarted.$date);
+    let date = new Date(); 
+    let timestamp = date.getTime();
+    let timeRunning = new Date(timestamp - startTime);
+    
     return (
-      <li key={item._id}>
-        <p className="queue-item">{item.text}</p>
-        <span id={item.key} className="oi oi-x remove-step-icon" onClick={this.deleteItem}></span>
-      </li>
+      <tr key={item._id.$oid}>
+        <td> {item.prediction.predictionTitle} </td> 
+        <td> {item.user.name} </td>
+        <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
+        <td> {timeRunning.toLocaleTimeString()} </td> 
+      </tr>
     )
   }
 
   render() {
-    var queueEntries = this.state.queue;
-    var listItems = queueEntries.map(this.createItems);
+    const { t } = this.props;
+  
+    if (!this.state.isFetchingData) {
+      var queueEntries = this.state.queue;
+      queueEntries = queueEntries.reverse();
+      var listItems = queueEntries.map(this.createItems);
+    }
     return (
       <div className="container">
         <div className="container-fluid">
-          <ul className="queue-list">
+          <Table striped bordered hover className="queue-table">
+            <thead>
+              <tr>
+                <th>{t('queue.tableTitle')}</th>
+                <th>{t('queue.tableName')}</th>
+                <th>{t('queue.tableStarted')}</th>
+                <th>{t('queue.tableRuntime')}</th>
+              </tr>
+            </thead>
+            <tbody>
               {listItems}
-          </ul>
+            </tbody>
+          </Table>
         </div>
       </div>
     )
   }
 }
-export default withRouter(Queue);
+export default withRouter(withTranslation()(Queue));

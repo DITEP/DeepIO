@@ -98,7 +98,7 @@ def queueControl():
     if request.method == 'POST':
         return queue.createQueueItem()
     if request.method == 'GET':
-        return queue.getQueueItem()
+        return queue.getQueue()
     if request.method == 'PUT':
         return queue.updateQueueItem()
     if request.method == 'DELETE':

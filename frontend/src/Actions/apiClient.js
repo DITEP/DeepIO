@@ -65,7 +65,11 @@ class APIClient {
   createQueueItem(newQueueItem) {
     return this.perform('post', '/queue', newQueueItem);
   }
-
+  
+  getQueue() {
+    return this.perform('get', '/queue');
+  }
+  
   async perform (method, resource, data) {
     return client({
       method,

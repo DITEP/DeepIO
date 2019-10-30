@@ -135,15 +135,15 @@ class Predict extends React.Component {
   }
   
   startPrediction() {
-    if (!this.state.file) { console.log('a')
+    if (!this.state.file) {
       return;
     }
     
-    if (!this.state.predictionTitle) { console.log('b')
+    if (!this.state.predictionTitle) {
       return;
     }
     
-    if (!this.state.userMail) { console.log('c')
+    if (!this.state.userMail) {
       return;
     }
     
