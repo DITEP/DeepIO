@@ -155,12 +155,11 @@ class Predict extends React.Component {
     
     this.apiClient.createPrediction(prediction).then((data) => {
       this.apiClient.updateUserHistory({"predictionID": data.data}).then((data) => {
-        console.log(data);
-      })
-      if (this.state.successfulUpload) {
-        /* ... */
-      }
-    })
+        this.apiClient.createQueueItem(data.data).then((data) => {
+          console.log(data);
+        }).catch((err) => {})
+      }).catch((err) => {})
+    }).catch((err) => {})
   }
 
 

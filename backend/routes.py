@@ -71,7 +71,7 @@ def updateUserHistory():
     
 ###
 
-### Job
+### Predictions
 
 # Get, create, update, delete a single job
 
@@ -93,13 +93,14 @@ def predictionControl():
 
 # Get, create, update the entire job queue
 @routes.route('/queue', methods = ['POST', 'GET', 'PUT', 'DELETE'])
-def updateUser():
+@jwt_required
+def queueControl():
     if request.method == 'POST':
-        return queue.createJob()
+        return queue.createQueueItem()
     if request.method == 'GET':
-        return queue.getJob()
+        return queue.getQueueItem()
     if request.method == 'PUT':
-        return queue.updateJob()
+        return queue.updateQueueItem()
     if request.method == 'DELETE':
-        return queue.deleteJob()
+        return queue.deleteQueueItem()
 ###

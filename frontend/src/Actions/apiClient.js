@@ -61,6 +61,11 @@ class APIClient {
     return this.perform('post', '/prediction', prediction);
   }
 
+  /*** ///  Maps to prediction controller  ///***/
+  createQueueItem(newQueueItem) {
+    return this.perform('post', '/queue', newQueueItem);
+  }
+
   async perform (method, resource, data) {
     return client({
       method,

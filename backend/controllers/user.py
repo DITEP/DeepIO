@@ -49,8 +49,13 @@ def updateUserHistory():
     data = request.get_json()
     user = mongo.db.users.find_one({'email': current_user['email']})
     predictionID = ObjectId(data['predictionID'])
-    mongo.db.users.update_one({'email': current_user['email']}, {"$addToSet": {"history": predictionID}})
-    return jsonify({'ok': True, 'message': 'User successfully updated.'}), 200
+    user = mongo.db.users.find_and_modify({'email': current_user['email']}, {"$addToSet": {"history": predictionID}})
+
+    returnValue = {}
+    returnValue['predictionID'] = data['predictionID']
+    returnValue['userID'] = str(user.get('_id'))
+    
+    return jsonify({'ok': True, 'data': returnValue }), 200
   except:
      return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
     
