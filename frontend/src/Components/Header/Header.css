@@ -113,7 +113,6 @@
 .banner-close {
   float: right;
   margin-right: 15px;
-  margin-top: 5px;
   cursor: pointer;
   -webkit-transition: -webkit-transform .8s ease-in-out;
   transition: transform .8s ease-in-out;

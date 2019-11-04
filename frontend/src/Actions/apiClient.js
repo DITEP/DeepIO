@@ -8,7 +8,7 @@ const client = axios.create({
 });
 
 class APIClient {
-  /*** ///  Maps to auth controller  ///***/  
+  /*** ///  Maps to auth controller  /// ***/  
   login(user) {
     return this.perform('post', '/login', user);
   }
@@ -27,7 +27,7 @@ class APIClient {
     return this.performRefresh('post', '/refresh');
   }
 
-  /*** ///  Maps to user controller  ///***/
+  /*** ///  Maps to user controller  /// ***/
   createUser(newUser) {
     return this.perform('post', '/user', newUser);
   }
@@ -56,18 +56,23 @@ class APIClient {
     return this.perform('get', '/user?email=' + email);
   }
 
-  /*** ///  Maps to prediction controller  ///***/
+  /*** ///  Maps to prediction controller  /// ***/
   createPrediction(prediction) {
     return this.perform('post', '/prediction', prediction);
   }
 
-  /*** ///  Maps to prediction controller  ///***/
+  /*** ///  Maps to prediction controller  /// ***/
   createQueueItem(newQueueItem) {
     return this.perform('post', '/queue', newQueueItem);
   }
   
   getQueue() {
     return this.perform('get', '/queue');
+  }
+  
+  /*** /// Mail /// ***/
+  sendMail() {
+    return this.perform('get', '/mail');
   }
   
   async perform (method, resource, data) {

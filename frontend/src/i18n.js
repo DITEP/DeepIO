@@ -13,7 +13,11 @@ i18n
   .use(initReactI18next)
   // init i18next
   .init({
-    fallbackLng: 'en',
+    backend: {
+      // for all available options read the backend's repository readme file
+      loadPath: '../public/locales/{{lng}}/{{ns}}.json'
+    },
+    fallbackLng: 'en-US',
     debug: true,
     interpolation: {
       escapeValue: false,

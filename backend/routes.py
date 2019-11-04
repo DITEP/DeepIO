@@ -7,6 +7,9 @@ import controllers.predict as prediction
 import controllers.queue as queue
 from application import jwt
 
+from flask_mail import Message
+from application import mail
+
 routes = Blueprint('routes', __name__)
 
 ### Authentication
@@ -103,4 +106,16 @@ def queueControl():
         return queue.updateQueueItem()
     if request.method == 'DELETE':
         return queue.deleteQueueItem()
+###
+
+
+### Mail
+
+@routes.route('/mail', methods = ['POST', 'GET', 'PUT', 'DELETE'])
+def mailControl():
+    if request.method == 'GET':
+      #msg = Message("Hello", sender="t_paust@gmx.de", recipients=["tristanpaust@gmail.com"])
+      #mail.send(msg)
+    
+      return jsonify({'ok': True, 'message': 'Route is working'}), 200
 ###

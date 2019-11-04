@@ -19,6 +19,7 @@ class Login extends React.Component {
     };
     
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.sendMail = this.sendMail.bind(this);
 	}
 
   async componentDidMount() {
@@ -75,6 +76,11 @@ class Login extends React.Component {
       })
     })
   }  
+  
+  sendMail = (event) => {
+    event.preventDefault();
+    this.apiClient.sendMail().then((data) => { console.log(data)})
+  }
 
 	render () {
     const { t } = this.props;
@@ -128,7 +134,7 @@ class Login extends React.Component {
             </Form>
             <a href='/register'>{t('login.registerlink')}</a>
             <br /><hr />
-            <a href='/login'>{t('login.forgotpasswordlink')}</a>
+            <a onClick={this.sendMail}>{t('login.forgotpasswordlink')}</a>
                         
           </div>
         </div>

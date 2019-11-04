@@ -15,6 +15,9 @@ hupexit() {
 trap hupexit HUP
 trap intexit INT
 
+cd frontend
+npm run build
+cd ..
 source backend/venv/bin/activate 
 python3 backend/run.py &
 cd frontend/

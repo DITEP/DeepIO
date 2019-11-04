@@ -10,6 +10,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from config import BaseConfig
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 
 # Extend JSON Encoder to make sure it works with ObjectIds
 class JSONEncoder(json.JSONEncoder):
@@ -29,6 +30,9 @@ flask_bcrypt = Bcrypt()
 # flask JSON web token manager
 jwt = JWTManager()
 
+# flask mail manager
+mail = Mail()
+
 def create_app():
     app = Flask(__name__, static_folder='../frontend/deepio/public/dist', template_folder='../frontend/deepio/public/')
     app.config.from_object(BaseConfig)
@@ -39,6 +43,8 @@ def create_app():
     jwt.init_app(app)
     # Bcrypt hashing init
     flask_bcrypt.init_app(app)
+    # Mail client init
+    mail.init_app(app)
     # Cross origin init
     CORS(app)
     # Extened JSONEncoder init
