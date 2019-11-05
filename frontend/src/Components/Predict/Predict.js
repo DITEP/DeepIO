@@ -6,6 +6,7 @@ import APIClient from '../../Actions/apiClient';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Dropzone from 'react-dropzone';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { withTranslation } from 'react-i18next';
 import i18n from "i18next";
@@ -16,13 +17,13 @@ class Predict extends React.Component {
 		this.state = {
       userMail: '',
       predictionTitle: '',
-      dropBoxIsHidden: false,
+      dropzoneIsLocked: false,
       fileIsHidden: true,
       file: {},
-      fileName: '',
-      uploadProgress: 0,
-      successfulUpload: false,
+  
       uploading: false,
+  
+      successfulUpload: false,
       fileError: false,
       titleError: false,
       otherError: false
@@ -30,11 +31,9 @@ class Predict extends React.Component {
     this.onDrop = (files) => {
       this.setState({file: files[0]});
       this.setState({
-        dropBoxIsHidden:true,
+        dropzoneIsLocked:true,
         fileIsHidden: false 
       });
-      console.log(this.state.file);
-      //this.uploadFiles(files[files.length-1]);
     };
 
     this.sendRequest = this.sendRequest.bind(this);
@@ -73,42 +72,23 @@ class Predict extends React.Component {
   }
   
   // Start uploading file, set state o pending,
-  // Calculate progress and update percentage bar,
   // Post to server
-  // Not done! Percentage bar is missing, upload isn't checked
-  sendRequest(file) {
-    return new Promise((resolve, reject) => {
-      const req = new XMLHttpRequest();
-  
-      req.upload.addEventListener("progress", event => {
-        if (event.lengthComputable) {
-          var currentProgess = {
-            state: "pending",
-            percentage: (event.loaded / event.total) * 100
-          };
-          this.setState({ uploadProgress: currentProgess });
-        }
-      });
-     
-      req.upload.addEventListener("load", event => {
-        var currentProgess = { state: "done", percentage: 100 };
-        this.setState({ uploadProgress: currentProgess });
-        resolve(req.response);
-      });
-     
-      req.upload.addEventListener("error", event => {
-        var currentProgess = { state: "error", percentage: 0 };
-        this.setState({ uploadProgress: currentProgess });
-        reject(req.response);
-      });
-  
-      var formData = new FormData();
-      formData.append('image', file);
-  
-      req.open("POST", '/upload'); //TODO
-      req.send(formData);
+  sendRequest() {
+    let file = this.state.file;
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    this.apiClient.uploadFile(formData).then((data) => {
+      this.setState({
+        dropzoneIsLocked: true,
+        fileIsHidden: false,
+        successfulUpload: true, 
+        uploading: false
+      })
     });
   }
+  
+  // TODO: Error handling for no files, unsuccessful upload, remove file, hide submit when done, show success
   
   // File is an object, object emptiness can not be checked in an easier way really
   isEmpty(obj) {
@@ -119,32 +99,13 @@ class Predict extends React.Component {
     }
     return JSON.stringify(obj) === JSON.stringify({});
   }
-  
-  // Not finished
+
   uploadFiles(file) {
-    return new Promise((resolve, reject) => {
-      this.setState({ 
-        uploadProgress: {}, 
-        uploading: true 
-      });
-      var file = this.state.files[0];
-      var self = this; // If the below gets turned into an arrow function, saving the scope is probably not needed anymore
-      this.sendRequest(file)
-      .then(function() {
-        self.setState({dropBoxIsHidden: 'hidden'})
-        self.setState({fileIsHidden: ''});
-        self.setState({ successfulUpload: true, uploading: false });
-        self.setState({file: process.env.PUBLIC_URL + '/uploads/' + file.name}); // TODO
-        self.setState({fileName: file.name});
-      })
-    })
-    .catch(e => {
-      // Not Production ready! Do some error handling here instead...
-      this.setState({ 
-        successfulUpload: true, 
-        uploading: false 
-      });
-    })
+    this.setState({  
+      uploading: true 
+    });
+    var file = this.state.file;
+    this.sendRequest()
   }
   
   handleInputChange = (event) => {
@@ -157,7 +118,7 @@ class Predict extends React.Component {
   removeFile() {
     this.setState({
       fileIsHidden: true,
-      dropBoxIsHidden: false,
+      dropzoneIsLocked: false,
       file: {}
     });
   }
@@ -230,9 +191,12 @@ class Predict extends React.Component {
           
           <div className="new-prediction-form">
             <div className="input-left-side">
-              <Dropzone onDrop={this.onDrop}>
+              <Dropzone 
+                onDrop={this.onDrop} 
+                disabled={!this.isEmpty(this.state.file)} 
+              >
                 {({getRootProps, getInputProps}) => (
-                  <section className={'container ' + (this.state.dropBoxIsHidden ? 'hidden' : '')}>
+                  <section className={'container ' + (this.state.dropzoneIsLocked ? 'hidden' : '')}>
                     <div {...getRootProps({className: 'dropzone'})}>
                       <input {...getInputProps()} />
                       <p>{t('prediction.dropzonehelper')}</p>
@@ -240,11 +204,30 @@ class Predict extends React.Component {
                   </section>
                 )}
               </Dropzone>
+              
               <div className={'preview-file ' + (this.state.fileIsHidden ? 'hidden' : '')}>
                 <p>{this.state.file.name}
                   <span className="remove-file" onClick={this.removeFile}></span>
                 </p>
               </div>
+              
+              <Button variant="primary" className="upload-button" onClick={this.uploadFiles} disabled={this.isEmpty(this.state.file)}>
+                <div className={'container ' + (this.state.uploading ? 'hidden' : '')}>
+                  Submit
+                </div>
+                <div className={'spinner-container ' + (this.state.uploading ? '' : 'hidden')}>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="upload-spinner"
+                  />
+                  <span>Loading...</span>
+                </div>
+              </Button>
+              
             </div>
             <div className="input-right-side">
               <Form.Group controlId="formBasicFile">

@@ -83,7 +83,27 @@
 }
 
 .btn-prediction.disabled:focus {
-    background-color: #ff0000;
-    border-color: #e82121;
-    box-shadow: 0 0 0 0.2rem rgba(243, 0, 0, 0.5)
+  background-color: #ff0000;
+  border-color: #e82121;
+  box-shadow: 0 0 0 0.2rem rgba(243, 0, 0, 0.5)
+}
+
+.upload-button {
+  margin-top: 20px;
+}
+
+spinner-container {
+  display: block;
+}
+
+spinner-container span {
+  display: inline-block;
+}
+
+.upload-spinner {
+  margin-right: 10px;
+}
+
+dropzone.disabled {
+  background-color: black !important;
 }

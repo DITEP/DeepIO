@@ -5,6 +5,8 @@ import controllers.auth as auth
 import controllers.user as user
 import controllers.predict as prediction
 import controllers.queue as queue
+import controllers.upload as upload
+
 from application import jwt
 
 from flask_mail import Message
@@ -113,6 +115,14 @@ def queueControl():
         return queue.deleteQueueItem()
 ###
 
+
+### Upload
+@routes.route('/upload', methods = ['POST'])
+@jwt_required
+def uploadControl():
+    if request.method == 'POST':
+        return upload.uploadFile()
+###
 
 ### Mail
 

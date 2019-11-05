@@ -73,6 +73,12 @@ class APIClient {
     return this.perform('get', '/queue');
   }
   
+  /*** /// Upload /// ***/
+  uploadFile(file) {
+    return this.perform('post', '/upload', file);  
+    // Please not that this is NOT the final route, as it doesn't go to ODIN but just to the local server
+  }
+  
   /*** /// Mail /// ***/
   sendMail() {
     return this.perform('get', '/mail');
@@ -80,7 +86,7 @@ class APIClient {
   
   // Perform takes in the mehthod, route, data and creates a new client
   // Also gets the token from localStorage and adds it to the header of the request
-  async perform (method, resource, data) {
+  async perform (method, resource, data) {         
     return client({
       method,
       url: resource,

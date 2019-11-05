@@ -17,7 +17,7 @@ user_schema = {
         },
         "password": {
             "type": "string",
-            "minLength": 10
+            "minLength": 5
         },
         "history": {
           "type": "array",
