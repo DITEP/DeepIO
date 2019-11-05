@@ -1,6 +1,8 @@
 from flask import request, jsonify
 from application import jwt
 
+# Return various error depending on what type of token error occured
+
 @jwt.expired_token_loader
 def my_expired_token_callback():
     return jsonify({

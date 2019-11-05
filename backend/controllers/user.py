@@ -22,6 +22,9 @@ def createUser():
         return jsonify({'ok': False, 'message': 'User exists parameters!'}), 409
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
+# Look up prediction details in collection by prediction ID saved in user history array
+# Return all values EXCEPT the ones in project
+# Make a dict out of all this and return
 def getUserDetails():
     currentUserMail = request.args['email']
     
@@ -43,6 +46,7 @@ def getUserDetails():
       return json_util.dumps(user), 200
     return jsonify({'ok': False, 'message': 'No user!'}), 400
 
+# Add new ID to set of prediction IDs
 def updateUserHistory():
   try:
     current_user = get_jwt_identity()
@@ -58,8 +62,8 @@ def updateUserHistory():
     return jsonify({'ok': True, 'data': returnValue }), 200
   except:
      return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
-    
 
+# Check wether the password is right (before saving a new one, check the old one)  
 def checkPassword():
   try:
     current_user = get_jwt_identity()
@@ -70,7 +74,8 @@ def checkPassword():
     return jsonify({'ok': False, 'message': 'Wrong credentials'}), 401
   except:
      return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
-    
+   
+# Make hash, save password    
 def changePassword():
     current_user = get_jwt_identity()
     data = request.get_json()
@@ -80,7 +85,9 @@ def changePassword():
       return jsonify({'ok': True, 'message': 'Email updated successfully!'}), 200
     except:
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
-    
+   
+# Check uniqeness of email address,
+# Overwrite old one with new one or return error 
 def changeEmail():
     current_user = get_jwt_identity()
     data = request.get_json()

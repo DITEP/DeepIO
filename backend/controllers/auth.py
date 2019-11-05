@@ -45,6 +45,7 @@ def logout():
     except:
         return jsonify({'ok': False, 'message': 'Something went wrong'}), 500
 
+# Check whether the present token is in the blacklist, and thus invalid
 def checkIfTokenInBlackList(decrypted_token):
     jti = decrypted_token['jti']
     token = mongo.db.blacklist.find_one({'expiredToken': jti})

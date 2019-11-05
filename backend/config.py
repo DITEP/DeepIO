@@ -13,7 +13,7 @@ class BaseConfig(object):
     # Development vs production environment
     DEBUG = True
     
-    # Mail Client - all default
+    # Mail Client - all default, need to be changed to actual mail server
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 25
     MAIL_USE_TLS = False

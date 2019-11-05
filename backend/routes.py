@@ -12,6 +12,10 @@ from application import mail
 
 routes = Blueprint('routes', __name__)
 
+###
+# Defines all routes used in the backend, checks for authentication (jwt_reauired), passes data to appropriate controller
+###
+
 ### Authentication
 # Check user, create token, redirect
 
@@ -36,6 +40,7 @@ def checkAuth():
 def logoutAccessToken():
     return auth.logout()
 
+# See if token is in blacklist already
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return auth.checkIfTokenInBlackList(decrypted_token)
@@ -114,7 +119,7 @@ def queueControl():
 @routes.route('/mail', methods = ['POST', 'GET', 'PUT', 'DELETE'])
 def mailControl():
     if request.method == 'GET':
-      #msg = Message("Hello", sender="t_paust@gmx.de", recipients=["tristanpaust@gmail.com"])
+      #msg = Message("Hello", sender="sender@sender.com", recipients=["recipient@recipient.com"])
       #mail.send(msg)
     
       return jsonify({'ok': True, 'message': 'Route is working'}), 200

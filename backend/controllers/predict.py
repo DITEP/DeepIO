@@ -6,6 +6,7 @@ from bson import json_util
 import controllers.errors
 import datetime
 
+# Make timestamp, get user, save new prediction
 def createPrediction():
     data = validate_prediction(request.get_json())
     if data['ok']:

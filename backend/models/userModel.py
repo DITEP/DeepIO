@@ -2,6 +2,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from jsonschema.exceptions import SchemaError
 
+# Users have a password, email, name (only for display puposes) and a history
+# History is an array of prediciton IDs that have been submitted by the user
+# Can be seen in the user profile 
 user_schema = {
     "type": "object",
     "properties": {
@@ -14,7 +17,7 @@ user_schema = {
         },
         "password": {
             "type": "string",
-            "minLength": 5
+            "minLength": 10
         },
         "history": {
           "type": "array",
@@ -32,6 +35,7 @@ user_schema = {
     "additionalProperties": False
 }
 
+# When data is going to be stored, try the data against the model to make sure it has the right format of required items
 def validate_user(data):
     try:
         validate(data, user_schema)

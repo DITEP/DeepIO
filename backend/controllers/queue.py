@@ -6,6 +6,7 @@ from bson import json_util, ObjectId
 import controllers.errors
 import datetime
 
+# Cast data in strings as mongoDB ObjectIDs, save in database
 def createQueueItem():
     data = validate_queue(request.get_json())
     print('in queue! ', request.get_json())
@@ -25,6 +26,7 @@ def createQueueItem():
       print(data)
       return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
+# Queue user and prediction collection for the IDs saved in queue, flatten return value, only return the three values in project back to frontend
 def getQueue():
   try:
     queue = mongo.db.queue.aggregate(

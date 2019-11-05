@@ -33,6 +33,8 @@ jwt = JWTManager()
 # flask mail manager
 mail = Mail()
 
+# Create the app and import everything, execute the function in run.py, 
+# in order to avoid circular dependencies and in order to gain availability in all other files
 def create_app():
     app = Flask(__name__, static_folder='../frontend/deepio/public/dist', template_folder='../frontend/deepio/public/')
     app.config.from_object(BaseConfig)
