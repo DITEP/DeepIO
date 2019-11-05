@@ -26,6 +26,10 @@ class History extends React.Component {
     this.getFilteredList = this.getFilteredList.bind(this);
   }
 
+  // Check the users auth token,
+  // If there is none / it is blacklisted,
+  // Push user to login, set message banner to appropriate message,
+  // Store current location to redirect user back here after successful login
   async componentDidMount() {
     this.apiClient = new APIClient();
 
@@ -53,6 +57,9 @@ class History extends React.Component {
 		})  
 	}
   
+  // Filter object array
+  // Return item if value at specified key includes letter(s)
+  // Used for searching through list of history items
   getFilteredList(array, key, value) {
     return array.filter(function(e) {
       return e[key].includes(value);
@@ -68,8 +75,10 @@ class History extends React.Component {
     this.setState({
       history: filteredList.reverse()
     });
-  } 
+  }
   
+  
+  // CreateTabs and CreateCols map arrays of data to return functions that generate DOM elements
   createTabs(item) {
     return (    
       <ListGroup.Item action eventKey={item._id.$oid} key={item._id.$oid}>
@@ -117,6 +126,7 @@ class History extends React.Component {
   }
 
   render() {
+    // Translation item
     const { t } = this.props;
     
     if (!this.state.isFetchingData) {

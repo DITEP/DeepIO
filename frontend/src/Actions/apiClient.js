@@ -1,12 +1,15 @@
 import axios from 'axios';
 
+// Obviously needs to get changed if the server port / address is changing
 const BASE_URI = 'http://vls-diteplearn:8001';
 
+// Client that is used in every server request
 const client = axios.create({
  baseURL: BASE_URI,
  json: true
 });
 
+// Call perform function with method, route and (if needed, e.g. POST) data 
 class APIClient {
   /*** ///  Maps to auth controller  /// ***/  
   login(user) {
@@ -75,6 +78,8 @@ class APIClient {
     return this.perform('get', '/mail');
   }
   
+  // Perform takes in the mehthod, route, data and creates a new client
+  // Also gets the token from localStorage and adds it to the header of the request
   async perform (method, resource, data) {
     return client({
       method,

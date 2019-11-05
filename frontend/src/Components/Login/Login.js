@@ -41,6 +41,9 @@ class Login extends React.Component {
     });
   }
   
+  // Check user password and mail,
+  // If successful, set token in localStorage, 
+  // Redirect to previous page if it exists or home 
   onSubmit = (event) => {
     event.preventDefault();
     

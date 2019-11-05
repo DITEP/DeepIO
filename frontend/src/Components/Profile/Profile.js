@@ -41,6 +41,10 @@ class Profile extends React.Component {
     this.openChangePassword = this.openChangePassword.bind(this);
 	}
 
+  // Check the users auth token,
+  // If there is none / it is blacklisted,
+  // Push user to login, set message banner to appropriate message,
+  // Store current location to redirect user back here after successful login
   async componentDidMount() {
     this.apiClient = new APIClient();
 
@@ -82,6 +86,7 @@ class Profile extends React.Component {
     });
   }
 
+  // Bool switches to toggle the password and email boxes
   openChangeEmail() {
     this.setState({
       isEmailOpen: !this.state.isEmailOpen,
@@ -96,6 +101,9 @@ class Profile extends React.Component {
     })
   }
 
+  // Check whether new mail and repeat mail are the same,
+  // Pass mail to backend, see whether address is used,
+  // Save it, if it is fresh, return error if it is in use
   onSubmitEmail = (event) => {
     event.preventDefault();
     this.resetIndicators();
@@ -133,6 +141,10 @@ class Profile extends React.Component {
     )
   }
 
+  // Check whether new password and repeat password are the same,
+  // Check that length is at least 10 digits
+  // Pass old password to backend and check for correctness
+  // If the above holds, change password, else show appropriate error message
   onSubmitPassword = (event) => {
     event.preventDefault();
     this.resetIndicators();

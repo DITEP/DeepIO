@@ -45,6 +45,10 @@ class Predict extends React.Component {
     this.isEmpty = this.isEmpty.bind(this);
   }
 
+  // Check the users auth token,
+  // If there is none / it is blacklisted,
+  // Push user to login, set message banner to appropriate message,
+  // Store current location to redirect user back here after successful login
   async componentDidMount() {
     this.apiClient = new APIClient();
     
@@ -68,6 +72,10 @@ class Predict extends React.Component {
     })
   }
   
+  // Start uploading file, set state o pending,
+  // Calculate progress and update percentage bar,
+  // Post to server
+  // Not done! Percentage bar is missing, upload isn't checked
   sendRequest(file) {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
@@ -102,6 +110,7 @@ class Predict extends React.Component {
     });
   }
   
+  // File is an object, object emptiness can not be checked in an easier way really
   isEmpty(obj) {
     for(var prop in obj) {
       if(obj.hasOwnProperty(prop)) {
@@ -111,12 +120,15 @@ class Predict extends React.Component {
     return JSON.stringify(obj) === JSON.stringify({});
   }
   
+  // Not finished
   uploadFiles(file) {
     return new Promise((resolve, reject) => {
-  
-      this.setState({ uploadProgress: {}, uploading: true });
+      this.setState({ 
+        uploadProgress: {}, 
+        uploading: true 
+      });
       var file = this.state.files[0];
-      var self = this;
+      var self = this; // If the below gets turned into an arrow function, saving the scope is probably not needed anymore
       this.sendRequest(file)
       .then(function() {
         self.setState({dropBoxIsHidden: 'hidden'})
@@ -128,7 +140,10 @@ class Predict extends React.Component {
     })
     .catch(e => {
       // Not Production ready! Do some error handling here instead...
-      this.setState({ successfulUpload: true, uploading: false });
+      this.setState({ 
+        successfulUpload: true, 
+        uploading: false 
+      });
     })
   }
   
@@ -177,6 +192,9 @@ class Predict extends React.Component {
       "storedAt": this.state.file.path
     }
     
+    // Create a new prediction in the database, return the auto generated ID, 
+    // Pass ID into next function to save it in the history of the creator,
+    // Pass the creator ID and the prediction ID to the last function to create a new item in the queue
     this.apiClient.createPrediction(prediction).then((data) => {
       this.apiClient.updateUserHistory({"predictionID": data.data}).then((data) => {
         this.apiClient.createQueueItem(data.data).then((data) => {
@@ -188,9 +206,9 @@ class Predict extends React.Component {
     				} 
     			} 
     			this.props.history.push(location) 
-        }).catch((err) => {})
-      }).catch((err) => {})
-    }).catch((err) => {})
+        }).catch((err) => { console.log('Something went wrong while creating the queue item') })
+      }).catch((err) => { console.log('Something went wrong while updating the user') })
+    }).catch((err) => { console.log('Something went wrong while creating a new prediction') })
   }
 
   resetIndicators() {
@@ -202,6 +220,7 @@ class Predict extends React.Component {
   }
 
 	render () {
+    // Translation item
     const { t } = this.props;
     return (
       <div className="container">

@@ -19,9 +19,12 @@ class Queue extends React.Component {
       isFetchingData: true,
       entriesExist: false
     }
-
   }
 
+  // Check the users auth token,
+  // If there is none / it is blacklisted,
+  // Push user to login, set message banner to appropriate message,
+  // Store current location to redirect user back here after successful login
   async componentDidMount() {
     this.apiClient = new APIClient();
 
@@ -53,6 +56,10 @@ class Queue extends React.Component {
       })
   }
 
+  // Map array of queue data to HTML items
+  // There wzas a problem with the timestamp and daylight savings (The time was off by one hour)
+  // Hence, the format function in the beginning, as well as momentJS to fix the issue
+  // Print creator name, prediction name, when the prediction started and for how long it has been running 
   createItems(item) {
     function format(time) {
       // Hours, minutes and seconds

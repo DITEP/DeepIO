@@ -1,6 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+// Get all js files and turn modern javascript functions into older ones for backwards compability
+// Bundle all files in dist folder in order to reduce resource load at each request
+
 module.exports = {
   entry: "./src/index.js", //relative to root of the application
     output : {

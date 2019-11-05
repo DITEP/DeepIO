@@ -38,8 +38,6 @@ class Header extends React.Component {
       console.log(err)
     })
   }
-
-
   
   logout = (event) => {
     this.apiClient.logout();
@@ -104,7 +102,7 @@ class Header extends React.Component {
             </Nav>
           </Navbar.Collapse>
   
-          <NavDropdown title="Languages" id="language-selector" className='mr-auto'>
+          <NavDropdown title={t('languages.header')} id="language-selector" className='mr-auto'>
             <NavDropdown.Item id="language-en" onClick={() => changeLanguage('en')}>
               <img
                 src={flag_gb}

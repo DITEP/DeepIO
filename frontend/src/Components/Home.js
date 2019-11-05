@@ -1,7 +1,10 @@
 import React from "react";
 import APIClient from '../Actions/apiClient';
 
-export default class Home extends React.Component {
+import { withTranslation } from 'react-i18next';
+import i18n from "i18next";
+
+class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -13,13 +16,16 @@ export default class Home extends React.Component {
   }
 
 	render () {
+    const { t } = this.props;
     return (
       <div className="container">
         <div className="container-fluid">
           <p>Welcome</p>
-          
+          <p>{t('home.explanation')}</p>
         </div>
       </div>
       );
     }
 }
+
+export default withTranslation()(Home);

@@ -46,6 +46,9 @@ class Register extends React.Component {
     });
   }
  
+  // Check whether all the data passes the criteria specified,
+  // Pass to backend, check whether email address is unique
+  // Save user and redirect with success message or show appropriate error message
   onSubmit = (event) => {
     event.preventDefault();
     
