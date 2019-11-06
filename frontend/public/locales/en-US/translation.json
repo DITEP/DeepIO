@@ -85,7 +85,10 @@
     "submitprediction": "Submit prediction",
     "fileisempty": "You need to upload a file in order to start a prediction.",
     "titleisempty": "You can not submit a new prediction without a title.",
-    "othererror": "Somthing went wrong. Please try again later."
+    "othererror": "Something went wrong. Please try again later.",
+    "nofileerror": "You need to select a file before you are able to upload",
+    "successfulUpload": "File upload successful.",
+    "uploadError": "There was an error uploading your file. Please try again."
   },
   "history": {
     "predictionrunning": "Prediction is running",

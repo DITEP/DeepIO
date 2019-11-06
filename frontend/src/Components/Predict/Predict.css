@@ -78,6 +78,11 @@
   font-size: 11pt;
 }
 
+.btn-prediction {
+  margin-top: 20px;
+}
+
+
 .btn-prediction.disabled {
   cursor: default;
 }
@@ -106,4 +111,8 @@ spinner-container span {
 
 dropzone.disabled {
   background-color: black !important;
+}
+
+.prediction-success {
+  color: #00b5ad;
 }

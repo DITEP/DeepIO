@@ -26,7 +26,9 @@ class Predict extends React.Component {
       successfulUpload: false,
       fileError: false,
       titleError: false,
-      otherError: false
+      otherError: false,
+      noFileError: false,
+      uploadError: false
     }
     this.onDrop = (files) => {
       this.setState({file: files[0]});
@@ -85,12 +87,16 @@ class Predict extends React.Component {
         successfulUpload: true, 
         uploading: false
       })
-    });
+    }).catch((err) => {
+      this.setState({
+        uploadError: true
+      })
+    })
   }
   
-  // TODO: Error handling for no files, unsuccessful upload, remove file, hide submit when done, show success
+  // TODO: remove file
   
-  // File is an object, object emptiness can not be checked in an easier way really
+  // File is an object, check whether it has properties
   isEmpty(obj) {
     for(var prop in obj) {
       if(obj.hasOwnProperty(prop)) {
@@ -101,8 +107,17 @@ class Predict extends React.Component {
   }
 
   uploadFiles(file) {
+    if (this.isEmpty(this.state.file)) {
+      this.setState({
+        noFileError: true
+      })
+      return;
+    }
+  
     this.setState({  
-      uploading: true 
+      uploading: true,
+      noFileError: false,
+      uploadError: false
     });
     var file = this.state.file;
     this.sendRequest()
@@ -119,6 +134,8 @@ class Predict extends React.Component {
     this.setState({
       fileIsHidden: true,
       dropzoneIsLocked: false,
+      successfulUpload: false,
+      uploading: false,
       file: {}
     });
   }
@@ -126,7 +143,7 @@ class Predict extends React.Component {
   startPrediction() {
     this.resetIndicators();
 
-    if (this.isEmpty(this.state.file)) {
+    if (!this.state.successfulUpload) {
       this.setState({
         fileError: true
       })
@@ -176,7 +193,10 @@ class Predict extends React.Component {
     this.setState ({
       fileError: false,
       titleError: false,
-      otherError: false
+      otherError: false,
+      noFileError: false,
+      uploadError: false,
+      uploading: false
     })
   }
 
@@ -211,11 +231,14 @@ class Predict extends React.Component {
                 </p>
               </div>
               
-              <Button variant="primary" className="upload-button" onClick={this.uploadFiles} disabled={this.isEmpty(this.state.file)}>
+              <Button variant="primary" 
+                className={'upload-button ' + ((this.state.successfulUpload) ? 'hidden' : '')} 
+                onClick={this.uploadFiles} 
+              >
                 <div className={'container ' + (this.state.uploading ? 'hidden' : '')}>
                   Submit
                 </div>
-                <div className={'spinner-container ' + (this.state.uploading ? '' : 'hidden')}>
+                <div className={'spinner-container ' + ((this.state.uploading) ? '' : 'hidden')}>
                   <Spinner
                     as="span"
                     animation="border"
@@ -227,6 +250,18 @@ class Predict extends React.Component {
                   <span>Loading...</span>
                 </div>
               </Button>
+              
+              <p className={'prediction-error ' + (this.state.noFileError ? 'show' : 'hidden')}>
+                {t('prediction.nofileerror')}
+              </p>
+              
+              <p className={'prediction-error ' + (this.state.uploadError ? 'show' : 'hidden')}>
+                {t('prediction.uploadError')}
+              </p>
+
+              <p className={'prediction-success ' + (this.state.successfulUpload ? 'show' : 'hidden')}>
+                {t('prediction.successfulUpload')}
+              </p>
               
             </div>
             <div className="input-right-side">
