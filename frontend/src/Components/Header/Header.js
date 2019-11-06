@@ -59,7 +59,7 @@ class Header extends React.Component {
     
     const changeLanguage = language => {
       if (language === 'en') {
-        i18n.changeLanguage('en-US');
+        i18n.changeLanguage('en');
       }
       if (language === 'fr') {
         i18n.changeLanguage('fr-FR');

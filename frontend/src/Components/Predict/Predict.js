@@ -96,8 +96,6 @@ class Predict extends React.Component {
     })
   }
   
-  // TODO: remove file
-  
   // File is an object, check whether it has properties
   isEmpty(obj) {
     for(var prop in obj) {
