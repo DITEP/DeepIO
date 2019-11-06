@@ -78,6 +78,11 @@ def changePassword():
 @jwt_required
 def updateUserHistory():
     return user.updateUserHistory()    
+
+@routes.route('/removeFromUserHistory', methods = ['DELETE'])
+@jwt_required
+def removeFromUserHistory():
+    return user.removeFromUserHistory()   
     
 ###
 

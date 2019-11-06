@@ -43,6 +43,10 @@ class APIClient {
     return this.perform('put', '/updateUserHistory', predictionID);
   }
   
+  removeFromUserHistory(ids) {
+    return this.perform('delete', '/removeFromUserHistory', ids);
+  }
+  
   changeEmail(email) {
     return this.perform('put', '/changeEmail', email);  
   }
@@ -63,14 +67,22 @@ class APIClient {
   createPrediction(prediction) {
     return this.perform('post', '/prediction', prediction);
   }
+  
+  deletePrediction(predictionID) {
+    return this.perform('delete', '/prediction', predictionID)
+  }
 
-  /*** ///  Maps to prediction controller  /// ***/
+  /*** ///  Maps to queue controller  /// ***/
   createQueueItem(newQueueItem) {
     return this.perform('post', '/queue', newQueueItem);
   }
   
   getQueue() {
     return this.perform('get', '/queue');
+  }
+  
+  deleteQueueItem(queueItem) {
+    return this.perform('delete', '/queue', queueItem);
   }
   
   /*** /// Upload /// ***/

@@ -106,6 +106,7 @@
     "tablename": "Submitted By",
     "tablestarted": "Time Started",
     "tableruntime": "Running For",
+    "tableedit": "Edit",
     "queueempty": "The queue is currently empty."
   }
 }

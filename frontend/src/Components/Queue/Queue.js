@@ -14,11 +14,14 @@ class Queue extends React.Component {
   constructor(props) {
 		super(props);
 		this.state = {
+      userMail: '',
       queue: [],
       searchField: '',
       isFetchingData: true,
       entriesExist: false
     }
+    this.createItems = this.createItems.bind(this);
+    this.deleteQueueItem = this.deleteQueueItem.bind(this);
   }
 
   // Check the users auth token,
@@ -28,7 +31,12 @@ class Queue extends React.Component {
   async componentDidMount() {
     this.apiClient = new APIClient();
 
-    this.apiClient.getAuth().then((data) =>
+    this.apiClient.getAuth().then((data) => {
+        this.setState({
+          userMail: data.logged_in_as.email
+        })
+      })
+      .then((data) =>
       this.apiClient.getQueue().then((data) => {
         this.setState({
           queue: data,
@@ -56,10 +64,35 @@ class Queue extends React.Component {
       })
   }
 
+  // Select whole table and row of item that is going to get deleted from DOM
+  // Delete the selected queue entry from the database, 
+  // Return ID of user who submitted the item (must obviously be the one whose deleting) as well as the ID of the prediction
+  // Pull the prediction ID from the users history
+  // Return the ID of the prediction
+  // Remove prediction from collection with ID
+  // Return link to file associated with prediction
+  // Delete the file from the server
+  deleteQueueItem(event) {
+    let queueID = event.target.parentNode.parentNode.id;
+    let table = event.target.parentNode.parentNode.parentNode;
+    let tableRow = event.target.parentNode.parentNode
+
+    this.apiClient.deleteQueueItem({'queueID': queueID}).then((data) => {
+      this.apiClient.removeFromUserHistory(data).then((res) => {
+        this.apiClient.deletePrediction(res.data).then((res) => {
+          this.apiClient.deleteFile(res.data).then((data) => {              
+            table.removeChild(tableRow);
+          }).catch((err) => { console.log('Error when deleting the file from the server ', err) })
+        }).catch((err) => { console.log('Error deleting the prediction ', err) })
+      }).catch((err) => { console.log('Error deleting the prediction from the users history ', err) })
+    }).catch((err) => { console.log('Error deleting the queue item ', err) })
+  }
+  
   // Map array of queue data to HTML items
   // There wzas a problem with the timestamp and daylight savings (The time was off by one hour)
   // Hence, the format function in the beginning, as well as momentJS to fix the issue
   // Print creator name, prediction name, when the prediction started and for how long it has been running 
+  // Check whether the user is also the creator of an item; if so, also show a delete icon
   createItems(item) {
     function format(time) {
       // Hours, minutes and seconds
@@ -82,13 +115,19 @@ class Queue extends React.Component {
     let currentTime = moment.utc(new Date())
     let difference = currentTime.diff(startedAt, 'seconds')
     let timeRunning = format(difference);
+    var isOwner = false;
+    
+    if (this.state.userMail === item.user.email) {
+      isOwner = true;
+    }
     
     return (
-      <tr key={item._id.$oid}>
+      <tr key={item._id.$oid} id={item._id.$oid}>
         <td> {item.prediction.predictionTitle} </td> 
         <td> {item.user.name} </td>
         <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
-        <td> {timeRunning} </td> 
+        <td> {timeRunning} </td>
+        <td> <span className={'remove-file ' + (isOwner ? '' : 'hidden')} onClick={this.deleteQueueItem}></span> </td> 
       </tr>
     )
   }
@@ -112,6 +151,7 @@ class Queue extends React.Component {
                 <th>{t('queue.tablename')}</th>
                 <th>{t('queue.tablestarted')}</th>
                 <th>{t('queue.tableruntime')}</th>
+                <th>{t('queue.tableedit')}</th>
               </tr>
             </thead>
             <tbody>

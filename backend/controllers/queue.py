@@ -9,7 +9,6 @@ import datetime
 # Cast data in strings as mongoDB ObjectIDs, save in database
 def createQueueItem():
     data = validate_queue(request.get_json())
-    print('in queue! ', request.get_json())
     if data['ok']:
       data = data['data']
       
@@ -35,7 +34,7 @@ def getQueue():
         {"$lookup": {"from": "predictions", "foreignField": "_id", "localField": "predictionID", "as": "prediction"}},
         {"$unwind": "$user"},
         {"$unwind": "$prediction"},
-        {"$project": {"user.name": 1, "prediction.predictionTitle": 1, "prediction.timeStarted": 1}},
+        {"$project": {"user.name": 1, "user.email": 1, "prediction.predictionTitle": 1, "prediction.timeStarted": 1}},
       ]
     )
     queue = json_util.dumps(queue)
@@ -46,5 +45,16 @@ def getQueue():
 def updateQueueItem():
   return
 
+# Find queue item in db by its ID, remove it from db
+# Return the prediction ID and user ID which were stored inside the queue item
 def deleteQueueItem():
-  return
+  try:
+    data = request.get_json()
+    itemToDelete = mongo.db.queue.find_one({'_id': ObjectId(data['queueID'])})
+    ids = {}
+    ids['userID'] = itemToDelete['userID']
+    ids['predictionID'] = itemToDelete['predictionID']
+    mongo.db.queue.remove(itemToDelete)
+    return json_util.dumps(ids), 200
+  except:
+    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'}), 400

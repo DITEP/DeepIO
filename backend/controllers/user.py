@@ -63,6 +63,20 @@ def updateUserHistory():
   except:
      return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 
+# Find a user by ID, find a prediction in the user's history by ID, remove the prediction from the history, 
+# Return the ID of the prediction
+def removeFromUserHistory():
+  try:
+    data = request.get_json()
+    userID = data['userID']['$oid']
+    predictionID = data['predictionID']['$oid']
+    user = mongo.db.users.find_and_modify({'_id': ObjectId(userID)}, {"$pull": {"history": ObjectId(predictionID)}})
+    returnValue = {}
+    returnValue['predictionID'] = predictionID
+    return jsonify({'ok': True, 'data': returnValue}), 200
+  except:
+     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+
 # Check wether the password is right (before saving a new one, check the old one)  
 def checkPassword():
   try:
