@@ -1,6 +1,0 @@
-Maybe add finished flag to predictions to separate them from those that are still queued?
-
-Percentage bar when uploading files
-Remove file and restart form while uploading
-
-How to start job when everything is done and there is a queue?
