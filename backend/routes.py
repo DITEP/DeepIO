@@ -117,11 +117,13 @@ def queueControl():
 
 
 ### Upload
-@routes.route('/upload', methods = ['POST'])
+@routes.route('/upload', methods = ['POST', 'DELETE'])
 @jwt_required
 def uploadControl():
     if request.method == 'POST':
         return upload.uploadFile()
+    if request.method == 'DELETE':
+        return upload.deleteFile()
 ###
 
 ### Mail

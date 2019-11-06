@@ -28,7 +28,8 @@ class Predict extends React.Component {
       titleError: false,
       otherError: false,
       noFileError: false,
-      uploadError: false
+      uploadError: false,
+      deleteError: false
     }
     this.onDrop = (files) => {
       this.setState({file: files[0]});
@@ -41,6 +42,7 @@ class Predict extends React.Component {
     this.sendRequest = this.sendRequest.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
+    this.deleteFile = this.deleteFile.bind(this);
     this.startPrediction = this.startPrediction.bind(this);
     this.resetIndicators = this.resetIndicators.bind(this);
     this.isEmpty = this.isEmpty.bind(this);
@@ -106,6 +108,7 @@ class Predict extends React.Component {
     return JSON.stringify(obj) === JSON.stringify({});
   }
 
+  // Get file object and upload it to the server
   uploadFiles(file) {
     if (this.isEmpty(this.state.file)) {
       this.setState({
@@ -130,14 +133,29 @@ class Predict extends React.Component {
     });
   }  
   
+  // Remove file from selection by emptying the file object, reset all messages and button states
   removeFile() {
     this.setState({
       fileIsHidden: true,
       dropzoneIsLocked: false,
       successfulUpload: false,
       uploading: false,
+      deleteError: false,
       file: {}
     });
+  }
+  
+  // Delete the previously uploaded file from the server and call removeFile to clear all messages, etc
+  deleteFile() {
+    let file = this.state.file.name;
+    
+    this.apiClient.deleteFile({'filename': file}).then((data) => {
+      this.removeFile();
+    }).catch((err) => {
+      this.setState({
+        deleteError: true
+      })
+    })
   }
   
   startPrediction() {
@@ -196,6 +214,7 @@ class Predict extends React.Component {
       otherError: false,
       noFileError: false,
       uploadError: false,
+      deleteError: false,
       uploading: false
     })
   }
@@ -227,7 +246,7 @@ class Predict extends React.Component {
               
               <div className={'preview-file ' + (this.state.fileIsHidden ? 'hidden' : '')}>
                 <p>{this.state.file.name}
-                  <span className="remove-file" onClick={this.removeFile}></span>
+                  <span className={'remove-file ' + (this.state.successfulUpload ? 'hidden' : '')} onClick={this.removeFile}></span>
                 </p>
               </div>
               
@@ -236,7 +255,7 @@ class Predict extends React.Component {
                 onClick={this.uploadFiles} 
               >
                 <div className={'container ' + (this.state.uploading ? 'hidden' : '')}>
-                  Submit
+                  {t('prediction.startupload')}
                 </div>
                 <div className={'spinner-container ' + ((this.state.uploading) ? '' : 'hidden')}>
                   <Spinner
@@ -247,9 +266,9 @@ class Predict extends React.Component {
                     aria-hidden="true"
                     className="upload-spinner"
                   />
-                  <span>Loading...</span>
+                  <span>{t('prediction.uploading')}</span>
                 </div>
-              </Button>
+              </Button> 
               
               <p className={'prediction-error ' + (this.state.noFileError ? 'show' : 'hidden')}>
                 {t('prediction.nofileerror')}
@@ -258,10 +277,21 @@ class Predict extends React.Component {
               <p className={'prediction-error ' + (this.state.uploadError ? 'show' : 'hidden')}>
                 {t('prediction.uploadError')}
               </p>
+              
+              <p className={'prediction-error ' + (this.state.deleteError ? 'show' : 'hidden')}>
+                {t('prediction.deleteError')}
+              </p>
 
               <p className={'prediction-success ' + (this.state.successfulUpload ? 'show' : 'hidden')}>
                 {t('prediction.successfulUpload')}
               </p>
+              
+              <Button variant="danger" 
+                className={'upload-button ' + ((this.state.successfulUpload) ? '' : 'hidden')} 
+                onClick={this.deleteFile} 
+              >
+                {t('prediction.deletefile')}
+              </Button>
               
             </div>
             <div className="input-right-side">

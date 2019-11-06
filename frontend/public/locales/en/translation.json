@@ -88,7 +88,11 @@
     "othererror": "Something went wrong. Please try again later.",
     "nofileerror": "You need to select a file before you are able to upload",
     "successfulUpload": "File upload successful.",
-    "uploadError": "There was an error uploading your file. Please try again."
+    "uploadError": "There was an error uploading your file. Please try again.",
+    "deleteError": "There was a problem deleting your file.",
+    "uploading": "Uploading...",
+    "startupload": "Submit",
+    "deletefile": "Delete file"
   },
   "history": {
     "predictionrunning": "Prediction is running",

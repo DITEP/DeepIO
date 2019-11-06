@@ -78,6 +78,11 @@ class APIClient {
     return this.perform('post', '/upload', file);  
     // Please not that this is NOT the final route, as it doesn't go to ODIN but just to the local server
   }
+
+  deleteFile(file) {
+    return this.perform('delete', '/upload', file);  
+    // Please not that this is NOT the final route, as it doesn't go to ODIN but just to the local server
+  }
   
   /*** /// Mail /// ***/
   sendMail() {
