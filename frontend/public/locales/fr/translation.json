@@ -108,6 +108,12 @@
     "tableruntime": "Running For",
     "tableedit": "Edit",
     "queueempty": "The queue is currently empty.",
-    "authdeletionerror": "You are not authorized to delete this prediction."
+    "popupdeleteheader": "Confirm that you want to delete",
+    "popupdeleteexplanation": "If you delete this item from the queue, it won't be executed anymore. Furthermore, it will be removed from your history  and the file connected to it will also be deleted. ",
+    "popupdeleteconfirm": "Confirm",
+    "popupdeletecancel": "Cancel",
+    "authdeletionerror": "You are not authorized to delete this prediction.",
+    "popupdeleteerror": "The deletion of the prediction has been cancelled.",
+    "popupdeletesuccess": "The prediction has been deleted successfully."
   }
 }

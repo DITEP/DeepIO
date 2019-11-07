@@ -4,6 +4,7 @@ import './Queue.css';
 import APIClient from '../../Actions/apiClient';
 
 import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 
 import i18n from "i18next";
 import { withTranslation } from 'react-i18next';
@@ -19,10 +20,18 @@ class Queue extends React.Component {
       searchField: '',
       isFetchingData: true,
       entriesExist: false,
-      authDeletionError: false
+      authDeletionError: false,
+      popupIsOpen: false,
+      popUpDeleteError: false,
+      currentItem: '',
+      currentItemName: '',
+      popupDeleteSuccess: false
     }
     this.createItems = this.createItems.bind(this);
     this.deleteQueueItem = this.deleteQueueItem.bind(this);
+    this.openPopup = this.openPopup.bind(this);
+    this.confirmPopup = this.confirmPopup.bind(this);
+    this.cancelPopup = this.cancelPopup.bind(this);
   }
 
   // Check the users auth token,
@@ -64,6 +73,29 @@ class Queue extends React.Component {
         }
       })
   }
+   
+  openPopup(event) {
+    this.setState({
+      popUpIsOpen: true,
+      currentItem: event.target,
+      currentItemName: event.target.parentElement.parentElement.firstChild.innerHTML,
+      popupDeleteSuccess: false
+    });
+  }
+  
+  confirmPopup() {
+     return this.deleteQueueItem(this.state.currentItem);
+  }
+  
+  cancelPopup() {
+    this.setState({
+      popUpIsOpen: false,
+      popUpDeleteError: true,
+      currentItem: '',
+      currentItemName: '',
+    });
+    return;  
+  }
 
   // Select whole table and row of item that is going to get deleted from DOM
   // Delete the selected queue entry from the database, 
@@ -75,18 +107,23 @@ class Queue extends React.Component {
   // Delete the file from the server
   deleteQueueItem(event) {
     this.setState({
-      authDeletionError: false
+      authDeletionError: false,
+      popUpIsOpen: false,
+      popUpDeleteError: false
     })
   
-    let queueID = event.target.parentNode.parentNode.id;
-    let table = event.target.parentNode.parentNode.parentNode;
-    let tableRow = event.target.parentNode.parentNode
-
+    let queueID = event.parentNode.parentNode.id;
+    let table = event.parentNode.parentNode.parentNode;
+    let tableRow = event.parentNode.parentNode
+    console.log(table, tableRow);
+    let self = this;
+    
     this.apiClient.deleteQueueItem({'queueID': queueID}).then((data) => {
       this.apiClient.removeFromUserHistory(data).then((res) => {
         this.apiClient.deletePrediction(res.data).then((res) => {
           this.apiClient.deleteFile(res.data).then((data) => {              
             table.removeChild(tableRow);
+            this.setState({ popupDeleteSuccess: true });
           }).catch((err) => { console.log('Error when deleting the file from the server ', err) })
         }).catch((err) => { console.log('Error deleting the prediction ', err) })
       }).catch((err) => { console.log('Error deleting the prediction from the users history ', err) })
@@ -132,7 +169,7 @@ class Queue extends React.Component {
         <td> {item.user.name} </td>
         <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
         <td> {timeRunning} </td>
-        <td> <span className={'remove-file ' + (isOwner ? '' : 'hidden')} onClick={this.deleteQueueItem}></span> </td> 
+        <td> <span className={'remove-file ' + (isOwner ? '' : 'hidden')} onClick={this.openPopup}></span> </td> 
       </tr>
     )
   }
@@ -147,27 +184,55 @@ class Queue extends React.Component {
     }
     return (
       <div className="container">
-        <div className="container-fluid">
+        
+        <div className={'delete-confirm ' + (this.state.popUpIsOpen ? 'show-popup' : '')}>
+          <div className='popup-header'>
+            <h4>{t('queue.popupdeleteheader')} {this.state.currentItemName}</h4>
+            <span className='close-popup' onClick={this.cancelPopup}></span>
+          </div>
+          <hr />
+          <div className='popup-body'>
+            <p>
+              {t('queue.popupdeleteexplanation')}
+            </p>
+          </div>
+          <hr />
+          <div className='popup-footer'>
+            <Button className="cancel-delete-button" onClick={this.cancelPopup}>{t('queue.popupdeletecancel')}</Button>
+            <Button className="confirm-delete-button" onClick={this.confirmPopup}>{t('queue.popupdeleteconfirm')}</Button>
+          </div>
+         </div> 
+         <div className={'black-overlay ' + (this.state.popUpIsOpen ? '' : 'hidden')}></div>
+        
+         <div className="container-fluid">
 
-          <p className={'login-error ' + (this.state.authDeletionError ? '' : 'hidden')}>
-            {t('queue.authdeletionerror')} 
-          </p>
+         <p className={'login-error ' + (this.state.authDeletionError ? '' : 'hidden')}>
+           {t('queue.authdeletionerror')} 
+         </p>
 
-          <Table striped bordered hover className={"queue-table " + (this.state.entriesExist ? '' : 'hidden')}>
-            <thead>
-              <tr>
-                <th>{t('queue.tabletitle')}</th>
-                <th>{t('queue.tablename')}</th>
-                <th>{t('queue.tablestarted')}</th>
-                <th>{t('queue.tableruntime')}</th>
-                <th>{t('queue.tableedit')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listItems}
-            </tbody>
-          </Table>
-          <p className={"queue-table " + (this.state.entriesExist ? 'hidden' : '')}>{t('queue.queueempty')}</p>
+         <p className={'login-error ' + (this.state.popUpDeleteError ? '' : 'hidden')}>
+           {t('queue.popupdeleteerror')} 
+         </p>
+          
+         <p className={'delete-success ' + (this.state.popupDeleteSuccess ? '' : 'hidden')}>
+           {t('queue.popupdeletesuccess')} 
+         </p>
+
+         <Table striped bordered hover className={"queue-table " + (this.state.entriesExist ? '' : 'hidden')}>
+           <thead>
+             <tr>
+               <th>{t('queue.tabletitle')}</th>
+               <th>{t('queue.tablename')}</th>
+               <th>{t('queue.tablestarted')}</th>
+               <th>{t('queue.tableruntime')}</th>
+               <th>{t('queue.tableedit')}</th>
+             </tr>
+           </thead>
+           <tbody>
+             {listItems}
+           </tbody>
+         </Table>
+         <p className={"queue-table " + (this.state.entriesExist ? 'hidden' : '')}>{t('queue.queueempty')}</p>
         </div>
       </div>
     )
