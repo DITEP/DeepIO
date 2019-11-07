@@ -107,6 +107,7 @@
     "tablestarted": "Time Started",
     "tableruntime": "Running For",
     "tableedit": "Edit",
-    "queueempty": "The queue is currently empty."
+    "queueempty": "The queue is currently empty.",
+    "authdeletionerror": "You are not authorized to delete this prediction."
   }
 }

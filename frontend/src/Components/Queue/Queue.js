@@ -18,7 +18,8 @@ class Queue extends React.Component {
       queue: [],
       searchField: '',
       isFetchingData: true,
-      entriesExist: false
+      entriesExist: false,
+      authDeletionError: false
     }
     this.createItems = this.createItems.bind(this);
     this.deleteQueueItem = this.deleteQueueItem.bind(this);
@@ -73,6 +74,10 @@ class Queue extends React.Component {
   // Return link to file associated with prediction
   // Delete the file from the server
   deleteQueueItem(event) {
+    this.setState({
+      authDeletionError: false
+    })
+  
     let queueID = event.target.parentNode.parentNode.id;
     let table = event.target.parentNode.parentNode.parentNode;
     let tableRow = event.target.parentNode.parentNode
@@ -85,7 +90,7 @@ class Queue extends React.Component {
           }).catch((err) => { console.log('Error when deleting the file from the server ', err) })
         }).catch((err) => { console.log('Error deleting the prediction ', err) })
       }).catch((err) => { console.log('Error deleting the prediction from the users history ', err) })
-    }).catch((err) => { console.log('Error deleting the queue item ', err) })
+    }).catch((err) => { this.setState({authDeletionError: true}) })
   }
   
   // Map array of queue data to HTML items
@@ -143,6 +148,10 @@ class Queue extends React.Component {
     return (
       <div className="container">
         <div className="container-fluid">
+
+          <p className={'login-error ' + (this.state.authDeletionError ? '' : 'hidden')}>
+            {t('queue.authdeletionerror')} 
+          </p>
 
           <Table striped bordered hover className={"queue-table " + (this.state.entriesExist ? '' : 'hidden')}>
             <thead>
