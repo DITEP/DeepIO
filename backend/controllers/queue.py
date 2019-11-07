@@ -3,6 +3,8 @@ from application import mongo
 from application import flask_bcrypt
 from models.queueModel import validate_queue
 from bson import json_util, ObjectId
+from flask_jwt_extended import (get_jwt_identity)
+
 import controllers.errors
 import datetime
 
@@ -45,16 +47,28 @@ def getQueue():
 def updateQueueItem():
   return
 
-# Find queue item in db by its ID, remove it from db
+# Get the current user
+# Find queue item in db by its ID
+# Get user who owns prediction from queue item
+# If current user == owner -> delete queue item
 # Return the prediction ID and user ID which were stored inside the queue item
 def deleteQueueItem():
   try:
+    current_user = get_jwt_identity()
+    user = mongo.db.users.find_one({'email': current_user['email']})
+    
     data = request.get_json()
     itemToDelete = mongo.db.queue.find_one({'_id': ObjectId(data['queueID'])})
     ids = {}
     ids['userID'] = itemToDelete['userID']
     ids['predictionID'] = itemToDelete['predictionID']
-    mongo.db.queue.remove(itemToDelete)
-    return json_util.dumps(ids), 200
+    
+    creator = mongo.db.users.find_one({'_id': ids['userID']})
+    
+    if user['email'] == creator['email']:
+      mongo.db.queue.remove(itemToDelete)
+      return json_util.dumps(ids), 200
+    else:
+      return jsonify({'ok': False, 'message': 'Unauthorized! parameters: {}'}), 401
   except:
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'}), 400
