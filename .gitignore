@@ -1,4 +1,5 @@
 backend/venv
+backend/config.py
 db_config.txt
 backend/__pycache__
 backend/controllers/__pycache__

@@ -34,6 +34,7 @@ class Queue extends React.Component {
     this.cancelPopup = this.cancelPopup.bind(this);
   }
 
+
   // Check the users auth token,
   // If there is none / it is blacklisted,
   // Push user to login, set message banner to appropriate message,
@@ -73,7 +74,10 @@ class Queue extends React.Component {
         }
       })
   }
-   
+  
+  // The popup is for the user to confirm before a prediction is deleted
+  // Opens a hidden element, remembers the row in the table and the item name
+  // Closes and shows error notification or closes, calls deleteQueueItem and shows success message 
   openPopup(event) {
     this.setState({
       popUpIsOpen: true,

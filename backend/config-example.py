@@ -2,11 +2,11 @@ import datetime
 
 class BaseConfig(object):
     # Database
-    # Slash needs percent encoding
-    MONGO_URI = "mongodb://deepIoAdmin:2019%2FRoussy@localhost:27017/deepio"
+    # Slash, @, etc need percent encoding
+    MONGO_URI = "mongodb://USERNAME:PASSWORD@localhost:27017/DATABASE"
     
     # Token Authentication
-    JWT_SECRET_KEY = 'SOOO_SECRET'
+    JWT_SECRET_KEY = 'THIS IS NOT SECURE! CHANGE ME'
     JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=120)
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ['access']

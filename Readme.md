@@ -48,3 +48,6 @@ The file backend/config.py contains all the backend routes (mongo url, secret, e
 Open the mongo shell by typing mongo
 Build an index on the collection blacklist by typing db.blacklist.createIndex( { "createdAt": 1 }, { expireAfterSeconds: 86400 } )
 Mongo deletes blacklisted tokens automatically after a week, in order to keep the collection small. However, for it to do so, it needs the collection to be indexed.
+
+mv backend/config-example.py backend/config.py
+Change mongo uri to match your preferences

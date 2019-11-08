@@ -49,8 +49,8 @@ class Header extends React.Component {
   
   closeBanner = (event) => {
     this.setState({
-    showBanner: false
-      })
+      showBanner: false
+    })
   }
   
   render() {
