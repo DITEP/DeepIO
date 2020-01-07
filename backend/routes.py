@@ -15,7 +15,7 @@ from application import mail
 routes = Blueprint('routes', __name__)
 
 ###
-# Defines all routes used in the backend, checks for authentication (jwt_reauired), passes data to appropriate controller
+# Defines all routes used in the backend, checks for authentication (jwt_required), passes data to appropriate controller
 ###
 
 ### Authentication

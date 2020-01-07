@@ -2,7 +2,7 @@
   "languages": {
     "header": "Languages",
     "english": "English",
-    "french": "French"
+    "french": "Français"
   },
   "header": {
     "home": "Home",
@@ -91,7 +91,7 @@
     "uploadError": "There was an error uploading your file. Please try again.",
     "deleteError": "There was a problem deleting your file.",
     "uploading": "Uploading...",
-    "startupload": "Submit",
+    "startupload": "Upload",
     "deletefile": "Delete file"
   },
   "history": {
