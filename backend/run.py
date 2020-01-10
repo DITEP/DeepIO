@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from application import create_app
-from prediction_engine import start_prediction_engine
 
-# start prediction engine
-start_prediction_engine()
+import sys
+sys.path.insert(1, './backend/prediction_deamon')
+from prediction_deamon import start_prediction_deamon
+
+start_prediction_deamon()
 
 # start the app
 app = create_app()

@@ -14,6 +14,10 @@ def createPrediction():
     user = mongo.db.users.find_one({'email': data['submittedBy']})
     data['submittedBy'] = user['_id']
     data['timeStarted'] = datetime.datetime.utcnow()
+    
+    data['result'] = None
+    data['timeEnded'] = None
+    
     newPrediction = mongo.db.predictions.insert_one(data).inserted_id
     return jsonify({'ok': True, 'data': newPrediction }), 200
   else:
