@@ -11,6 +11,9 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 
 import i18n from "i18next";
+
+import Plot from 'react-plotly.js';
+
 import { withTranslation } from 'react-i18next';
 
 class History extends React.Component {
@@ -100,10 +103,22 @@ class History extends React.Component {
     var result = i18n.t('history.noresult');
     
     if (item.result) {
-      result = item.result
+      result = JSON.parse(item.result)
+      
+      var plot_data = [];
+      for (var i = 0; i < Object.keys(result).length; i++) {
+        var trace1 = {
+          x: [...Array(30).keys()],
+          y: result[i],
+          type: 'scatter',
+          name: 'Patient '+i,
+        };
+        plot_data.push(trace1)
+      }
+
     }
-    
-    return (    
+  
+    return (
       <Tab.Pane eventKey={item._id.$oid} key={item._id.$oid}>
         <Table striped bordered hover className="prediction-info">
           <tbody>
@@ -117,7 +132,7 @@ class History extends React.Component {
             </tr>
             <tr>
               <td> Result: </td> 
-              <td> {result} </td>
+              <td> <Plot data={plot_data} layout={ {width: 500, height: 400, title: 'Survie du patient'} }/></td>
             </tr>
           </tbody>
         </Table>

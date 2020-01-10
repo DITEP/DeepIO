@@ -13,6 +13,7 @@ import datetime
 import sys
 sys.path.insert(1, './backend')
 from prediction_engine import Prediction_Engine
+import json
 
 
 def get_oldest_pred_in_queue(db):
@@ -25,15 +26,16 @@ def get_oldest_pred_in_queue(db):
     
     pred_id =  document['predictionID']
     pred = db.predictions.find_one({'_id': ObjectId(pred_id)})
-    time_started = pred['timeStarted']
-    
-    if oldest_date is None:
-      oldest_date = time_started
-      oldest_pred_id = pred_id
-    else:
-      if oldest_date > time_started:
+        
+    if pred['storedAt'].split('.')[-1] == 'npy':
+      time_started = pred['timeStarted']
+      if oldest_date is None:
         oldest_date = time_started
         oldest_pred_id = pred_id
+      else:
+        if oldest_date > time_started:
+          oldest_date = time_started
+          oldest_pred_id = pred_id
     
   return oldest_pred_id
 
@@ -46,13 +48,23 @@ def get_pred_data(db, pred_id):
   return data
 
 
-def put_data_in_db(db, id_pred, result):
-  db.predictions.update_one({'_id': ObjectId(id_pred)},{'$set': {
-                             'result': Binary(pickle.dumps(result, protocol=2)),
-                             'timeEnded': datetime.datetime.utcnow()
-                            }
-  }, upsert=False)
+def make_json(result): 
+  d = {}
+  patient_id = 0
+  for patient in result:
+    d[patient_id] = patient.tolist()
+    patient_id += 1
+  
+  return json.dumps(d)
+  
 
+
+def put_data_in_db(db, id_pred, result):
+  jsonified_results = make_json(result)
+  db.predictions.update_one({'_id': ObjectId(id_pred)},{'$set': {
+                             'result': jsonified_results,
+                             'timeEnded': datetime.datetime.utcnow()}}, upsert=False)
+  
   
 def remove_from_queue(db, pred_id):
   queue_ticket = db.queue.find_one({'predictionID': ObjectId(pred_id)})
@@ -65,25 +77,25 @@ def deamon_loop():
   db = connection['deepio']
   db.authenticate('deepIoAdmin', '2019Roussy')
   
-  pred_engine = Prediction_Engine(2)
+  pred_engine = Prediction_Engine(14)
 
   while True:
     if db.queue.count() > 0:
       # get the oldest prediction
       id_oldest_pred = get_oldest_pred_in_queue(db)
       
-      # get the data of the oldest prediction
-      pred_data = get_pred_data(db, id_oldest_pred)
-      
-      # run the prediction
-      pred_result = pred_engine.predict(pred_data)
-      #pred_result = np.zeros((2, 2))
-      
-      # put the results in the database
-      put_data_in_db(db, id_oldest_pred, pred_result)
-      
-      # remove the request from the queue
-      remove_from_queue(db, id_oldest_pred)
+      if id_oldest_pred is not None:
+        # get the data of the oldest prediction
+        pred_data = get_pred_data(db, id_oldest_pred)
+
+        # run the prediction
+        pred_result = pred_engine.predict(pred_data)
+
+        # put the results in the database
+        put_data_in_db(db, id_oldest_pred, pred_result)
+
+        # remove the request from the queue
+        remove_from_queue(db, id_oldest_pred)
       
     
     time.sleep(5)

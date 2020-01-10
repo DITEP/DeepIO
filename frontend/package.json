@@ -11,11 +11,13 @@
     "i18next-xhr-backend": "^3.2.0",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
+    "plotly.js": "^1.52.0",
     "react": "^16.10.2",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.10.2",
     "react-dropzone": "^10.1.10",
     "react-i18next": "^11.0.0",
+    "react-plotly.js": "^2.4.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "to-string-loader": "^1.1.5"
