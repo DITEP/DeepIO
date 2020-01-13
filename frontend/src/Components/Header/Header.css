@@ -9,6 +9,10 @@
   height: 4px;
 }
 
+#basic-navbar-nav {
+  margin-left: -90px;
+}
+
 .navbar {
   color: black;
   background-color: white;

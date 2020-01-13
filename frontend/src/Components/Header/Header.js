@@ -99,6 +99,8 @@ class Header extends React.Component {
               <Nav.Link href="/queue">{t('header.queue')}</Nav.Link>
               <span className="nav-link-separator">|</span>
               <Nav.Link href="/predict">{t('header.prediction')}</Nav.Link>
+              <span className="nav-link-separator">|</span>
+              <Nav.Link href="/history">{t('header.showhistory')}</Nav.Link>
             </Nav>
           </Navbar.Collapse>
   
@@ -127,10 +129,9 @@ class Header extends React.Component {
   
           <Navbar.Collapse id="profile-navbar-nav" className='justify-content-end'>
             <Nav >
-              <Nav.Link href="/login" className={'mr-auto ' + (this.state.userIsLoggedIn ? 'hidden' : '')}>Login</Nav.Link>
-              <NavDropdown title="Profile" id="basic-nav-dropdown" className={'mr-auto ' + (this.state.userIsLoggedIn ? '' : 'hidden')}>
+              <Nav.Link href="/login" className={'mr-auto ' + (this.state.userIsLoggedIn ? 'hidden' : '')}>{t('header.showlogin')}</Nav.Link>
+              <NavDropdown title={t('header.profile')} id="basic-nav-dropdown" className={'mr-auto ' + (this.state.userIsLoggedIn ? '' : 'hidden')}>
                 <NavDropdown.Item href="/profile">{t('header.showprofile')}</NavDropdown.Item>
-                <NavDropdown.Item href="/history">{t('header.showhistory')}</NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={this.logout}>{t('header.showlogout')}</NavDropdown.Item>
               </NavDropdown>

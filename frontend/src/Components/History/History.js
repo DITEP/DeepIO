@@ -101,106 +101,125 @@ class History extends React.Component {
       let timeEnded = new Date(item.timeEnded.$date);
       endTime = timeEnded.toLocaleTimeString() + ' ' + timeEnded.toLocaleDateString()
     }
-
     
-    // Creating the plot for each patient
-    function  createPatientList(item) {
-      return (    
-        <ListGroup.Item action eventKey={item.patient_id} key={item.patient_id}>
-          {item.patient_id}
-        </ListGroup.Item>
-      )
-    }
-    var patientList = item.result.map(createPatientList);
-
-    function createPatientPlot(item) {
-      console.log('item plot', item)
-      var plot_data = [];
-      
-      Object.keys(item).forEach(function(key) {
-        if (key != 'patient_id') {
-          if (key == 'NO') {
-              var trace1 = {
-              x: [...Array(30).keys()],
-              y: item[key],
-              type: 'scatter',
-              name: key,
-              mode: 'lines',
-              line: {
-                dash: 'Solid',
-                width: 2
-              }
-            }
-            plot_data.push(trace1)
-          } else {
-              var trace1 = {
-              x: [...Array(30).keys()],
-              y: item[key],
-              type: 'scatter',
-              name: key,
-              mode: 'lines',
-              line: {
-                dash: 'dot',
-                width: 2
-              }
-            }
-            plot_data.push(trace1) 
-          }
+    function createPlotPatient(item) {
+      if (item.result) {
+        // Creating the plot for each patient
+        function  createPatientList(item) {
+          return (    
+            <ListGroup.Item action eventKey={item.patient_id} key={item.patient_id}>
+              {item.patient_id}
+            </ListGroup.Item>
+          )
         }
-      })
+        var patientList = item.result.map(createPatientList);
 
-      return (    
-        <Tab.Pane eventKey={item.patient_id} key={item.patient_id} mountOnEnter="true" unmountOnExit="false">
-          <Table striped bordered hover className="prediction-plot">
-            <tbody>
-              <tr> <Plot data={plot_data} layout={ {width: 500, height: 500,
-                                                    title: item.patient_id,
-                                                    xaxis: {title: 'Temps'},
-                                                    yaxis: {title: 'Probabilité de survie'}}}/>
-              </tr>
-            </tbody>
-          </Table>
-        </Tab.Pane> 
-      )
+        function createPatientPlot(item) {
+          console.log('item plot', item)
+          var plot_data = [];
+
+          Object.keys(item).forEach(function(key) {
+            if (key != 'patient_id') {
+              if (key == 'NO') {
+                  var trace1 = {
+                  x: [...Array(30).keys()],
+                  y: item[key],
+                  type: 'scatter',
+                  name: key,
+                  mode: 'lines',
+                  line: {
+                    dash: 'Solid',
+                    width: 2
+                  }
+                }
+                plot_data.push(trace1)
+              } else {
+                  var trace1 = {
+                  x: [...Array(30).keys()],
+                  y: item[key],
+                  type: 'scatter',
+                  name: key,
+                  mode: 'lines',
+                  line: {
+                    dash: 'dot',
+                    width: 2
+                  }
+                }
+                plot_data.push(trace1) 
+              }
+            }
+          })
+
+          return (    
+            <Tab.Pane eventKey={item.patient_id} key={item.patient_id} mountOnEnter="true" unmountOnExit="false">
+              <Table striped bordered hover className="prediction-plot">
+                <tbody>
+                  <tr> <Plot data={plot_data} layout={ {width: 500, height: 500,
+                                                        title: item.patient_id,
+                                                        xaxis: {title: i18n.t('history.plotXaxis')},
+                                                        yaxis: {title: i18n.t('history.plotYaxis')}}}/>
+                  </tr>
+                </tbody>
+              </Table>
+            </Tab.Pane> 
+          )
+        }
+        var patientPlot = item.result.map(createPatientPlot);
+
+        return (
+                  <div className="container">
+                    <div className="container-fluid">
+                      <Tab.Container id="list-plot" defaultActiveKey='patient_0'>
+                        <Row key="f">
+                          <Col sm={4}  id='list_group_patient'>   
+                            {patientList}
+                          </Col>
+                          <Col sm={8}>
+                            <Tab.Content>
+                              {patientPlot}
+                            </Tab.Content>
+                          </Col>
+                        </Row>
+                      </Tab.Container>
+                    </div>
+                  </div>
+        )
+
+      } else {
+        return (
+           <div> </div>
+        )
+      }
+      
     }
-    var patientPlot = item.result.map(createPatientPlot);
+    
+    
+    
+    
+
+    var res = createPlotPatient(item)
     
     
     
     return (
       <Tab.Pane eventKey={item._id.$oid} key={item._id.$oid} mountOnEnter="true" unmountOnExit="false">
-        <Table striped bordered hover className="prediction-info">
+        <Table bordered className="prediction-info" size="sm">
           <tbody>
             <tr>
-              <td> Prediction name: </td> 
+              <td className="prediction-info-left" > {i18n.t('history.predictionname')}</td> 
               <td> {item.predictionTitle} </td>
             </tr>
             <tr>
-              <td> Prediction started: </td> 
+              <td> {i18n.t('history.predictionstarted')}</td> 
               <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
             </tr>
             <tr>
-              <td> Prediction finished: </td> 
+              <td> {i18n.t('history.predictionfinished')}</td> 
               <td> {endTime} </td>
             </tr>
             <tr>
           
-                <div className="container">
-                  <div className="container-fluid">
-                    <Tab.Container id="list-plot" defaultActiveKey='patient_0'>
-                      <Row key="f">
-                        <Col sm={4}  id='list_group_patient'>   
-                          {patientList}
-                        </Col>
-                        <Col sm={8}>
-                          <Tab.Content>
-                            {patientPlot}
-                          </Tab.Content>
-                        </Col>
-                      </Row>
-                    </Tab.Container>
-                  </div>
-                </div>
+                {res}
 
             </tr>
           </tbody>
@@ -226,7 +245,7 @@ class History extends React.Component {
         <div className="container-fluid">
         
           <Tab.Container id="list-group-tabs-example" defaultActiveKey="explanation">
-            <Table striped hover className="prediction-info">
+            <Table striped className="prediction-list">
               <Row key="Explanation">
                 <Col sm={4}>   
                   <ListGroup.Item action eventKey="explanation">

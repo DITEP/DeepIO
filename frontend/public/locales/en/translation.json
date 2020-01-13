@@ -9,7 +9,9 @@
     "queue": "Prediction Queue",
     "prediction": "New Prediction",
     "showprofile": "Show profile",
-    "showhistory": "Prediction History",
+    "showhistory": "My predictions",
+    "profile": "My profile",
+    "showlogin": "Login",
     "showlogout": "Logout"
   },
   "home": {
@@ -98,8 +100,13 @@
     "predictionrunning": "Prediction is running",
     "noresult": "To be determined",
     "explanationtab": "Explanation",
-    "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the nams to get moe information about them!",
-    "searchbar": "Type to filter by prediction title"
+    "explanationcontent": "The tabs on the left side of the screen are the names of all the predictions that you have started so far. Click on the names to see the prediction results.",
+    "searchbar": "Type to filter by prediction title",
+    "predictionname": "Prediction name:",
+    "predictionstarted": "Prediction start date:",
+    "predictionfinished": "Prediction end date:",
+    "plotXaxis": "Time",
+    "plotYaxis": "Survival probability"
   },
   "queue": {
     "tabletitle": "Prediction Title",

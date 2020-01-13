@@ -9,7 +9,9 @@
     "queue": "Prédictions en attente",
     "prediction": "Nouvelle prédiction",
     "showprofile": "Voir mon profil",
-    "showhistory": "Historique des prédictions",
+    "showhistory": "Mes prédictions",
+    "profile": "Mon profil",
+    "showlogin": "Se connecter",
     "showlogout": "Se déconnecter"
   },
   "home": {
@@ -78,13 +80,13 @@
   },
   "prediction": {
     "header": "Lancer une nouvelle prédiction",
-    "titleplaceholder": "Entrez un titre pour votre prédiction",
-    "predictiontitlehelp": "Ceci sera visible publiquement dans la liste des prédictions en attente",
+    "titleplaceholder": "Entrez un titre pour votre prédiction.",
+    "predictiontitlehelp": "Ceci sera visible publiquement dans la liste des prédictions en attente.",
     "dropzonehelper": "Cliquez ici pour ouvrir un explorateur de fichier ou glissez et déposez votre fichier dans cette boîte",
-    "submitpredictioninfo": "Vous ne pouvez pas lancer une nouvelle prédiction tant votre fichier n'a pas fini d'être importer",
-    "submitprediction": "Envoyer la prédiction",
-    "fileisempty": "Vous devez importer un fichier pour lancer une nouvelle prédiction.",
-    "titleisempty": "Vous ne pouvez pas lancer une prédiction sans titre.",
+    "submitpredictioninfo": "Vous ne pouvez pas lancer une nouvelle prédiction tant votre fichier n'a pas fini d'être importé.",
+    "submitprediction": "Démarrer la prédiction",
+    "fileisempty": "Vous devez importer un fichier pour lancer une nouvelle prédiction !",
+    "titleisempty": "Vous ne pouvez pas lancer de prédiction sans titre !",
     "othererror": "Il y a eu une erreur. Réessayer plus tard.",
     "nofileerror": "Vous devez sélectionner un fichier pour pouvoir l'importer.",
     "successfulUpload": "Importation du fichier terminée",
@@ -98,8 +100,13 @@
     "predictionrunning": "Prédiction en cours",
     "noresult": "A déterminer",
     "explanationtab": "Explication",
-    "explanationcontent": "Les onglets sur la gauche listent les noms des prédictions que vous avez lancé. Cliquez sur les noms pour avoir plus d'informations à leur sujet.",
-    "searchbar": "Rechercher des prédiction par titre"
+    "explanationcontent": "Les onglets sur la gauche listent les noms des prédictions que vous avez lancé. Cliquez sur les noms pour voir les résultats des prédictions.",
+    "searchbar": "Rechercher des prédictions par titre",
+    "predictionname": "Nom de la prédiction :",
+    "predictionstarted": "Date de départ de la prédiction :",
+    "predictionfinished": "Date de fin de la prédiction :",
+    "plotXaxis": "Temps",
+    "plotYaxis": "Probabilité de survie"
   },
   "queue": {
     "tabletitle": "Nom de la prédiction",
