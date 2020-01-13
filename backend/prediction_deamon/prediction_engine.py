@@ -86,7 +86,7 @@ class Prediction_Engine:
     return gen_of_model         
   
   
-  def predict(self, X):
+  def predict_with_mean(self, X):
     avg_pred = np.zeros((len(X), 30))
     
     for m in self.loaded_models.keys():
@@ -101,6 +101,31 @@ class Prediction_Engine:
     avg_pred /= len(self.loaded_models.keys())
     
     return avg_pred
+  
+  
+  def predict_with_median(self, X):
+    median_pred = np.zeros((len(self.loaded_models.keys()), len(X), 30))
+    
+    model_id = 0
+    for m in self.loaded_models.keys():
+      index_of_genes_in_X = []
+      for g in self.genes_of_models[m]:
+        i = self.genes_index.index(g)
+        index_of_genes_in_X.append(i)
+      
+      sub_X = X[:, index_of_genes_in_X]
+      
+      median_pred[model_id] = self.loaded_models[m].predict(sub_X)
+      model_id += 1
+      
+    median_pred = np.median(median_pred, axis=0)
+    
+    return median_pred
+  
+  
+  def predict(self, X):
+    #return self.predict_with_mean(X)
+    return self.predict_with_median(X)
 
     
 
