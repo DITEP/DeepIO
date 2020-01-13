@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import pymongo
 from bson import ObjectId
 import numpy as np
+import pandas as pd
 import pprint
 from os import listdir
 from os.path import isfile, join
@@ -15,6 +16,13 @@ sys.path.insert(1, './backend')
 from prediction_engine import Prediction_Engine
 import json
 
+f = open('./backend/prediction_deamon/genes_of_treatment_to_test.txt', 'r')
+treatments_to_try = f.read().splitlines()
+f.close()
+
+df = pd.read_csv('./backend/prediction_deamon/X_columns.csv')
+genes_index = df['x'].tolist()
+    
 
 def get_oldest_pred_in_queue(db):
   cursor = db.queue.find({})
@@ -60,9 +68,9 @@ def make_json(result):
 
 
 def put_data_in_db(db, id_pred, result):
-  jsonified_results = make_json(result)
+  #jsonified_results = make_json(result)
   db.predictions.update_one({'_id': ObjectId(id_pred)},{'$set': {
-                             'result': jsonified_results,
+                             'result': result,
                              'timeEnded': datetime.datetime.utcnow()}}, upsert=False)
   
   
@@ -70,6 +78,29 @@ def remove_from_queue(db, pred_id):
   queue_ticket = db.queue.find_one({'predictionID': ObjectId(pred_id)})
   db.queue.delete_one({'_id': ObjectId(queue_ticket['_id'])})
   
+
+def pred_with_treatement(pred_engine, pred_data):
+  simulation_result = {}
+  simulation_result['NO'] = pred_engine.predict(pred_data)
+
+  for treatment in treatments_to_try:
+    gene_index = genes_index.index(treatment)   
+    X_treatment = np.copy(pred_data)
+    X_treatment[:, gene_index] = 0
+    simulation_result[treatment] = pred_engine.predict(X_treatment)
+    
+  # make it JSON
+  results = []
+  for i in range(len(pred_data)):
+    patient_pred = {}
+    patient_pred['patient_id'] = 'patient_'+str(i)
+    for treatment in simulation_result.keys():
+      patient_pred[treatment] = simulation_result[treatment][i].tolist()
+    results.append(patient_pred)
+  
+  return results
+  
+
 
 def deamon_loop():
   # connect to the local database
@@ -89,11 +120,13 @@ def deamon_loop():
         pred_data = get_pred_data(db, id_oldest_pred)
 
         # run the prediction
-        pred_result = pred_engine.predict(pred_data)
+        #pred_result = pred_engine.predict(pred_data)
+        pred_result = pred_with_treatement(pred_engine, pred_data)
+
 
         # put the results in the database
         put_data_in_db(db, id_oldest_pred, pred_result)
-
+        
         # remove the request from the queue
         remove_from_queue(db, id_oldest_pred)
       
@@ -105,3 +138,4 @@ def start_prediction_deamon():
     proc = multiprocessing.Process(target=deamon_loop, args=(), daemon=True)
     proc.start()
     print('# Prediction engine started with PID: ' + str(proc.pid))
+    print(treatments_to_try)

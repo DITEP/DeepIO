@@ -90,6 +90,8 @@ class History extends React.Component {
     )
   }
   
+  
+  
   createCols(item) {
     let startTime = new Date(item.timeStarted.$date);
     
@@ -99,29 +101,80 @@ class History extends React.Component {
       let timeEnded = new Date(item.timeEnded.$date);
       endTime = timeEnded.toLocaleTimeString() + ' ' + timeEnded.toLocaleDateString()
     }
-    
-    var result = i18n.t('history.noresult');
-    
-    if (item.result) {
-      result = JSON.parse(item.result)
-      
-      var plot_data = [];
-      for (var i = 0; i < Object.keys(result).length; i++) {
-        var trace1 = {
-          x: [...Array(30).keys()],
-          y: result[i],
-          type: 'scatter',
-          name: 'Patient '+i,
-        };
-        plot_data.push(trace1)
-      }
 
+    
+    // Creating the plot for each patient
+    function  createPatientList(item) {
+      return (    
+        <ListGroup.Item action eventKey={item.patient_id} key={item.patient_id}>
+          {item.patient_id}
+        </ListGroup.Item>
+      )
     }
-  
+    var patientList = item.result.map(createPatientList);
+
+    function createPatientPlot(item) {
+      console.log('item plot', item)
+      var plot_data = [];
+      
+      Object.keys(item).forEach(function(key) {
+        if (key != 'patient_id') {
+          if (key == 'NO') {
+              var trace1 = {
+              x: [...Array(30).keys()],
+              y: item[key],
+              type: 'scatter',
+              name: key,
+              mode: 'lines',
+              line: {
+                dash: 'Solid',
+                width: 2
+              }
+            }
+            plot_data.push(trace1)
+          } else {
+              var trace1 = {
+              x: [...Array(30).keys()],
+              y: item[key],
+              type: 'scatter',
+              name: key,
+              mode: 'lines',
+              line: {
+                dash: 'dot',
+                width: 2
+              }
+            }
+            plot_data.push(trace1) 
+          }
+        }
+      })
+
+      return (    
+        <Tab.Pane eventKey={item.patient_id} key={item.patient_id} mountOnEnter="true" unmountOnExit="false">
+          <Table striped bordered hover className="prediction-plot">
+            <tbody>
+              <tr> <Plot data={plot_data} layout={ {width: 500, height: 500,
+                                                    title: item.patient_id,
+                                                    xaxis: {title: 'Temps'},
+                                                    yaxis: {title: 'Probabilité de survie'}}}/>
+              </tr>
+            </tbody>
+          </Table>
+        </Tab.Pane> 
+      )
+    }
+    var patientPlot = item.result.map(createPatientPlot);
+    
+    
+    
     return (
-      <Tab.Pane eventKey={item._id.$oid} key={item._id.$oid}>
+      <Tab.Pane eventKey={item._id.$oid} key={item._id.$oid} mountOnEnter="true" unmountOnExit="false">
         <Table striped bordered hover className="prediction-info">
           <tbody>
+            <tr>
+              <td> Prediction name: </td> 
+              <td> {item.predictionTitle} </td>
+            </tr>
             <tr>
               <td> Prediction started: </td> 
               <td> {startTime.toLocaleTimeString() + ' ' + startTime.toLocaleDateString()} </td>
@@ -131,12 +184,29 @@ class History extends React.Component {
               <td> {endTime} </td>
             </tr>
             <tr>
-              <td> Result: </td> 
-              <td> <Plot data={plot_data} layout={ {width: 500, height: 400, title: 'Survie du patient'} }/></td>
+          
+                <div className="container">
+                  <div className="container-fluid">
+                    <Tab.Container id="list-plot" defaultActiveKey='patient_0'>
+                      <Row key="f">
+                        <Col sm={4}  id='list_group_patient'>   
+                          {patientList}
+                        </Col>
+                        <Col sm={8}>
+                          <Tab.Content>
+                            {patientPlot}
+                          </Tab.Content>
+                        </Col>
+                      </Row>
+                    </Tab.Container>
+                  </div>
+                </div>
+
             </tr>
           </tbody>
         </Table>
       </Tab.Pane>  
+
     )
   }
 
@@ -155,33 +225,26 @@ class History extends React.Component {
       <div className="container">
         <div className="container-fluid">
         
-          <Form.Group controlId="formBasicFile" className="col-6">
-            <Form.Control 
-              type="text" 
-              placeholder={t('history.searchbar')}
-              name='searchField' 
-              value={this.state.searchField}
-              onChange={this.handleInputChange}
-            />
-          </Form.Group>
-        
           <Tab.Container id="list-group-tabs-example" defaultActiveKey="explanation">
-            <Row key="Explanation">
-              <Col sm={4}>   
-                <ListGroup.Item action eventKey="explanation">
-                  {t('history.explanationtab')}
-                </ListGroup.Item>
-                {tabs}
-              </Col>
-              <Col sm={8}>
-                <Tab.Content>
-                  <Tab.Pane eventKey="explanation">
-                    {t('history.explanationcontent')}
-                  </Tab.Pane>
-                  {cols}
-                </Tab.Content>
-              </Col>
-            </Row>
+            <Table striped hover className="prediction-info">
+              <Row key="Explanation">
+                <Col sm={4}>   
+                  <ListGroup.Item action eventKey="explanation">
+                    {t('history.explanationtab')}
+                  </ListGroup.Item>
+                  {tabs}
+                </Col>
+
+                <Col sm={8}>
+                  <Tab.Content>
+                    <Tab.Pane eventKey="explanation">
+                      {t('history.explanationcontent')}
+                    </Tab.Pane>
+                    {cols}
+                  </Tab.Content>
+                </Col>
+              </Row>
+            </Table>
           </Tab.Container>
         
         </div>

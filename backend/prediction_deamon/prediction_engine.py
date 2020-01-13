@@ -18,10 +18,12 @@ class Prediction_Engine:
     self.model_list = self.get_model_list()
     self.files_of_models = self.get_files_of_model()
     self.genes_of_models = self.get_gen_list_per_model()
-    self.loaded_models = self.load_models(nb_models_to_loads)
     
     df = pd.read_csv('./backend/prediction_deamon/X_columns.csv')
     self.genes_index = df['x'].tolist()
+  
+    self.loaded_models = self.load_models(nb_models_to_loads)
+
     
     
   def load_models(self, nb_models_to_loads):
@@ -94,7 +96,6 @@ class Prediction_Engine:
         index_of_genes_in_X.append(i)
       
       sub_X = X[:, index_of_genes_in_X]
-      
       avg_pred += self.loaded_models[m].predict(sub_X)
         
     avg_pred /= len(self.loaded_models.keys())
