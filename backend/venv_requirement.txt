@@ -1,0 +1,14 @@
+Werkzeug==0.16.0
+pandas==0.25.3
+rpy2==3.2.4
+jsonschema==3.2.0
+numpy==1.16.1
+Flask==1.1.1
+Keras==2.3.1
+flask_bcrypt==0.7.1
+flask_cors==3.0.8
+flask_jwt_extended==3.24.1
+flask_mail==0.9.1
+flask_pymongo==2.3.0
+pymongo==3.10.1
+tensorflow==1.14.0

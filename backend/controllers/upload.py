@@ -8,7 +8,7 @@ import controllers.errors
 
 # Store selected file in the frontend public folder for now, needs to be changed to some ODIN route later on
 def uploadFile():
-  uploadFolder = './frontend/public/uploads'
+  uploadFolder = '/app/uploads/'
   file = request.files['file']
   if file:
     filename = secure_filename(file.filename)
@@ -19,7 +19,7 @@ def uploadFile():
       
 # Find a file in the public folder by name and remove it
 def deleteFile():
-  uploadFolder = './frontend/public/uploads'
+  uploadFolder = '/app/uploads'
   data = request.get_json()
   filename = data['filename']
   if filename:

@@ -2,7 +2,7 @@
 from application import create_app
 
 import sys
-sys.path.insert(1, './backend/prediction_deamon')
+sys.path.insert(1, './prediction_deamon')
 from prediction_deamon import start_prediction_deamon
 
 start_prediction_deamon()

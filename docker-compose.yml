@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+
+###########################
+# Setup backend container #
+###########################
+  backend:
+    build: ./backend
+    expose:
+      - ${BACKEND_PORT}
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    volumes:
+      - uploads:/app/uploads
+
+###########################
+# Setup MongoDB container #
+###########################
+  mongodb:
+    image: mongo:latest
+    container_name: deepio_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: deepio
+    
+    expose:
+      - ${MONGO_PORT}
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    volumes:
+      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+
+############################
+# Setup frontend container #
+############################
+  frontend:
+    build: ./frontend
+    expose:
+      - ${FRONTEND_PORT}
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    volumes:
+      - uploads:/app/public/uploads
+
+
+volumes:
+  uploads:
+

@@ -12,15 +12,15 @@ from bson.binary import Binary
 import pickle
 import datetime
 import sys
-sys.path.insert(1, './backend')
+sys.path.insert(1, './prediction_deamon')
 from prediction_engine import Prediction_Engine
 import json
 
-f = open('./backend/prediction_deamon/genes_of_treatment_to_test.txt', 'r')
+f = open('./prediction_deamon/genes_of_treatment_to_test.txt', 'r')
 treatments_to_try = f.read().splitlines()
 f.close()
 
-df = pd.read_csv('./backend/prediction_deamon/X_columns.csv')
+df = pd.read_csv('./prediction_deamon/X_columns.csv')
 genes_index = df['x'].tolist()
     
 
@@ -50,8 +50,8 @@ def get_oldest_pred_in_queue(db):
 
 def get_pred_data(db, pred_id):
   pred = db.predictions.find_one({'_id': ObjectId(pred_id)})
-  pred_file_name = pred['storedAt']
-  file_path = './frontend/public/uploads/' + pred_file_name
+  pred_file_name = '/app/uploads/' + pred['storedAt']
+  file_path = pred_file_name
   data = np.load(file_path)
   return data
 
@@ -104,7 +104,7 @@ def pred_with_treatement(pred_engine, pred_data):
 
 def deamon_loop():
   # connect to the local database
-  connection = MongoClient('localhost', 27017)
+  connection = MongoClient('mongodb', 27017)
   db = connection['deepio']
   db.authenticate('deepIoAdmin', '2019Roussy')
   

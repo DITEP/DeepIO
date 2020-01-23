@@ -13,13 +13,13 @@ class Prediction_Engine:
   
   
   def __init__(self, nb_models_to_loads):
-    self.path_to_models = './backend/prediction_deamon/ML_models/'
+    self.path_to_models = './ML_models/'
     self.files_list = self.get_files_list()
     self.model_list = self.get_model_list()
     self.files_of_models = self.get_files_of_model()
     self.genes_of_models = self.get_gen_list_per_model()
     
-    df = pd.read_csv('./backend/prediction_deamon/X_columns.csv')
+    df = pd.read_csv('./X_columns.csv')
     self.genes_index = df['x'].tolist()
   
     self.loaded_models = self.load_models(nb_models_to_loads)
