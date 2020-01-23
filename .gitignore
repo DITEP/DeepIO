@@ -4,3 +4,6 @@ db_config.txt
 backend/__pycache__
 backend/controllers/__pycache__
 backend/models/__pycache__
+backend/ML_models/
+.ipynb_checkpoints
+**/__pycache__/
