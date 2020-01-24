@@ -1,7 +1,12 @@
 import axios from 'axios';
 
 // Obviously needs to get changed if the server port / address is changing
-const BASE_URI = 'http://vls-diteplearn:8002';
+
+var var_env = require('/app/var_env.json');
+var DOMAIN = var_env['DOMAIN']
+var BACKEND_PORT = var_env['BACKEND_PORT']
+
+const BASE_URI = 'http://'+DOMAIN+':'+BACKEND_PORT.toString();
 
 // Client that is used in every server request
 const client = axios.create({
