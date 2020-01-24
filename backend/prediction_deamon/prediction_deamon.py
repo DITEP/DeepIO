@@ -11,6 +11,7 @@ from os.path import isfile, join
 from bson.binary import Binary
 import pickle
 import datetime
+import os
 import sys
 sys.path.insert(1, './prediction_deamon')
 from prediction_engine import Prediction_Engine
@@ -104,9 +105,9 @@ def pred_with_treatement(pred_engine, pred_data):
 
 def deamon_loop():
   # connect to the local database
-  connection = MongoClient('mongodb', 27017)
-  db = connection['deepio']
-  db.authenticate('deepIoAdmin', '2019Roussy')
+  connection = MongoClient('mongodb', int(os.environ['MONGO_PORT']))
+  db = connection[os.environ['DATABASE_NAME']]
+  db.authenticate(os.environ['MONGO_USERNAME'], os.environ['MONGO_PASSWORD'])
   
   pred_engine = Prediction_Engine(14)
 
