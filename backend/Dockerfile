@@ -1,4 +1,4 @@
-FROM node:13.6.0-buster
+FROM nikolaik/python-nodejs:python3.6-nodejs13
 
 # set working directory
 WORKDIR /app
