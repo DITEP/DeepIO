@@ -8,7 +8,7 @@ import datetime
 import threading
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-from config import BaseConfig
+from backConfig import BaseConfig
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 
