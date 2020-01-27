@@ -3,6 +3,7 @@
 <h2>Requirements</h2>
 <ul>
 	<li>Docker deamon up and running</li>
+        <li>Docker Compose installed</li>
 </ul>
 
 <h2> Starting the app </h2>
