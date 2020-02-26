@@ -1,6 +1,6 @@
 # DeepIO
 
-Estimate patients' outcome from cancer RNAseq using deep learning models trained with transfer learning.
+Estimate patient's outcome from cancer RNAseq using deep learning models trained with transfer learning.
 
 ## Getting Started
 
@@ -37,7 +37,7 @@ If the Docker deamon was started with sudo, run:
 sudo ./start_server.sh
 ```
 
-To use the application, open your web browser and go the following (replace the content between brackets by the values in *DeepIO/.env*):
+To use the application, open your web browser and go to the following adress (replace the content between brackets by the values in *DeepIO/.env*):
 
 ```
 http://[DOMAIN]:[FRONTEND_PORT]
