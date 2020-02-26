@@ -74,53 +74,51 @@ class Prediction_Engine:
   def get_gen_list_per_model(self):
     gen_of_model = {}
     for m in self.model_list:
-        if m in self.files_of_models.keys():
-            f = self.files_of_models[m]
-            fdata = f[0:-3] + '.Rdata'
-            pandas2ri.activate()
-            base = importr('base')
-            base.load(self.path_to_models + fdata)
-            rdf = base.mget(base.ls())
-            gen_list = rdf[0][-1]
-            gen_of_model[m] = gen_list
+      if m in self.files_of_models.keys():
+        f = self.files_of_models[m]
+        fdata = f[0:-3] + '.Rdata'
+        pandas2ri.activate()
+        base = importr('base')
+        base.load(self.path_to_models + fdata)
+        rdf = base.mget(base.ls())
+        gen_list = rdf[0][-1]
+        gen_of_model[m] = gen_list
     return gen_of_model         
   
   
-  def predict_with_mean(self, X):
-    avg_pred = np.zeros((len(X), 30))
-    
-    for m in self.loaded_models.keys():
-      index_of_genes_in_X = []
-      for g in self.genes_of_models[m]:
-        i = self.genes_index.index(g)
-        index_of_genes_in_X.append(i)
-      
-      sub_X = X[:, index_of_genes_in_X]
-      avg_pred += self.loaded_models[m].predict(sub_X)
-        
-    avg_pred /= len(self.loaded_models.keys())
-    
-    return avg_pred
-  
-  
-  def predict_with_median(self, X):
-    median_pred = np.zeros((len(self.loaded_models.keys()), len(X), 30))
+  def predict_all_models(self, X):
+    all_pred = []
     
     model_id = 0
     for m in self.loaded_models.keys():
-      index_of_genes_in_X = []
-      for g in self.genes_of_models[m]:
-        i = self.genes_index.index(g)
-        index_of_genes_in_X.append(i)
       
-      sub_X = X[:, index_of_genes_in_X]
-      
-      median_pred[model_id] = self.loaded_models[m].predict(sub_X)
-      model_id += 1
-      
-    median_pred = np.median(median_pred, axis=0)
+      if type(X) is pd.core.frame.DataFrame: # if Salmon input
+        selected_TPM = []
+        for g in self.genes_of_models[m]:
+          selected_TPM.append(X[g]['TPM'])
+        selected_TPM = np.array(selected_TPM).reshape((1, len(selected_TPM)))
+        all_pred.append(self.loaded_models[m].predict(selected_TPM))
+        
     
-    return median_pred
+      elif type(X) is np.ndarray:  # if numpy input
+        index_of_genes_in_X = []
+        for g in self.genes_of_models[m]:
+          i = self.genes_index.index(g)
+          index_of_genes_in_X.append(i)
+        sub_X = X[:, index_of_genes_in_X]
+        all_pred.append(self.loaded_models[m].predict(sub_X))
+    
+    all_pred = np.array(all_pred)
+      
+    return all_pred
+
+
+  def predict_with_mean(self, X):
+    return np.mean(self.predict_all_models(X), axis=0)
+  
+  
+  def predict_with_median(self, X):
+    return np.median(self.predict_all_models(X), axis=0)
   
   
   def predict(self, X):
