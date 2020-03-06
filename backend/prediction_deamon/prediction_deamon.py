@@ -52,6 +52,10 @@ def get_oldest_pred_in_queue(db):
   return oldest_pred_id
 
 
+def normalize(x):
+    return (x - np.min(x)) / (np.max(x) - np.min(x))
+
+
 def load_salmon_file(file_path):
   df = pd.read_csv(file_path, sep='\t')
   df_name = df['Name'].str.split('|', 8, expand=True)
@@ -78,11 +82,10 @@ def load_salmon_file(file_path):
   df = df.drop(columns=['gene'])
   df = df.set_index('name')
   df = df.T
-  
-  # we use it to make the output of salmon similar to the training data
-  # need to be changed by a proper data standardization
-  df /= 1000
-  
+  df_data = df.values
+  df_data = normalize(np.log10(df_data + 1))
+  df = pd.DataFrame(data=df_data, columns=df.columns, index=['TPM'])
+
   return df
 
 
