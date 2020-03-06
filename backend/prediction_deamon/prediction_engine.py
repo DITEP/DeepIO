@@ -33,10 +33,10 @@ class Prediction_Engine:
       if len(loaded_models) == nb_models_to_loads:
         break
       if m in self.files_of_models.keys():
-        print('Loading model...' + str(len(loaded_models) + 1) + '/' + str(nb_models_to_loads), '(' + m + ')' )
+        print('Loading model...' + str(len(loaded_models) + 1) + '/' + str(nb_models_to_loads), '(' + m + ')', flush=True)
         model = load_model(self.path_to_models + self.files_of_models[m])
         loaded_models[m] = model
-    print('Model loading done!')
+    print('Model loading done!', flush=True)
     return loaded_models
 
 
