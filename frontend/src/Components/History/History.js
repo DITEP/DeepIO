@@ -90,8 +90,6 @@ class History extends React.Component {
     )
   }
   
-  
-  
   createCols(item) {
     let startTime = new Date(item.timeStarted.$date);
     
@@ -101,7 +99,19 @@ class History extends React.Component {
       let timeEnded = new Date(item.timeEnded.$date);
       endTime = timeEnded.toLocaleTimeString() + ' ' + timeEnded.toLocaleDateString()
     }
-    
+
+    function range(start, stop, step) {
+      var a = [start], b = start;
+      while (b < stop) {
+          a.push((b += step || 1)/365);
+      }
+      return a;
+    }
+
+    function x_axis(nb_bins) {
+      return range(0, 3498, 3498/nb_bins);
+    } 
+      
     function createPlotPatient(item) {
       if (item.result) {
         // Creating the plot for each patient
@@ -122,7 +132,7 @@ class History extends React.Component {
             if (key != 'patient_id') {
               if (key == 'NO') {
                   var trace1 = {
-                  x: [...Array(30).keys()],
+                  x: x_axis(item[key].length),
                   y: item[key],
                   type: 'scatter',
                   name: key,
@@ -135,7 +145,7 @@ class History extends React.Component {
                 plot_data.push(trace1)
               } else {
                   var trace1 = {
-                  x: [...Array(30).keys()],
+                  x: x_axis(item[key].length),
                   y: item[key],
                   type: 'scatter',
                   name: key,
@@ -157,7 +167,7 @@ class History extends React.Component {
                   <tr> <Plot data={plot_data} layout={ {width: 500, height: 500,
                                                         title: item.patient_id,
                                                         xaxis: {title: i18n.t('history.plotXaxis')},
-                                                        yaxis: {title: i18n.t('history.plotYaxis')}}}/>
+                                                        yaxis: {range: [0, 1], title: i18n.t('history.plotYaxis')}}}/>
                   </tr>
                 </tbody>
               </Table>

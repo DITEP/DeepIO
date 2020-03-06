@@ -105,7 +105,7 @@
     "predictionname": "Prediction name:",
     "predictionstarted": "Prediction start date:",
     "predictionfinished": "Prediction end date:",
-    "plotXaxis": "Time",
+    "plotXaxis": "Time (years)",
     "plotYaxis": "Survival probability"
   },
   "queue": {
