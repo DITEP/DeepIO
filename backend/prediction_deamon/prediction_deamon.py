@@ -20,12 +20,14 @@ import json
 
 ACCEPTED_FILE_TYPES = ['npy', 'sf']
 
-f = open('./prediction_deamon/genes_of_treatment_to_test.txt', 'r')
-treatments_to_try = f.read().splitlines()
-f.close()
+df_normalization_value = pd.read_csv('./prediction_deamon/ML_models/normalization_value.csv', index_col=0)
+TPM_MIN = df_normalization_value.loc['first_input_standardization']['x_min']
+TPM_MAX = df_normalization_value.loc['first_input_standardization']['x_max']
+
+df_treatments = pd.read_csv('./prediction_deamon/treatment_to_simulate.csv')
 
 df = pd.read_csv('./prediction_deamon/X_columns.csv')
-genes_index = df['x'].tolist()
+genes_index = df['genes'].tolist()
     
 
 def get_oldest_pred_in_queue(db):
@@ -52,9 +54,10 @@ def get_oldest_pred_in_queue(db):
   return oldest_pred_id
 
 
-def normalize(x):
-    return (x - np.min(x)) / (np.max(x) - np.min(x))
 
+
+def normalize(x):
+    return (x - TPM_MIN) / (TPM_MAX - TPM_MIN)
 
 def load_salmon_file(file_path):
   df = pd.read_csv(file_path, sep='\t')
@@ -62,6 +65,7 @@ def load_salmon_file(file_path):
   df = df.drop(columns=['Name'])
   df = pd.concat([df_name, df], axis=1)
   df = df[[0, 1, 5, 'TPM']]
+  df = df.dropna()
   
   genes_list = np.unique(df[1].values)
   gen_col = df[1].values
@@ -128,12 +132,25 @@ def remove_from_queue(db, pred_id):
 
 def pred_with_treatement(pred_engine, pred_data):
   simulation_result = {}
+
+  all_X = []
   simulation_result['NO'] = pred_engine.predict(pred_data)
 
-  for treatment in treatments_to_try:
-    gene_index = genes_index.index(treatment)   
-    X_treatment = np.copy(pred_data)
-    X_treatment[:, gene_index] = 0
+  for treatment in df_treatments.ligand:
+    sdf = df_treatments[df_treatments['ligand'] == treatment]
+    targets = sdf['target_gene_symbol'].values
+    affinity_units = sdf['affinity_units'].unique()[0]
+    affinity_median = sdf['affinity_median'].values
+    X_treatment = pred_data.copy(deep=True)
+    for i in range(len(targets)):
+      t = targets[i]
+      a = affinity_median[i]
+        
+      if 'C50' in affinity_units:
+        X_treatment[t] *= a
+      else:
+        X_treatment[t] = 0
+        
     simulation_result[treatment] = pred_engine.predict(X_treatment)
     
   # make it JSON
@@ -144,9 +161,10 @@ def pred_with_treatement(pred_engine, pred_data):
     for treatment in simulation_result.keys():
       patient_pred[treatment] = simulation_result[treatment][i].tolist()
     results.append(patient_pred)
+
+  print(results, flush=True)
   
   return results
-  
 
 
 def deamon_loop():
@@ -155,7 +173,7 @@ def deamon_loop():
   db = connection[os.environ['DATABASE_NAME']]
   db.authenticate(os.environ['MONGO_USERNAME'], os.environ['MONGO_PASSWORD'])
   
-  pred_engine = Prediction_Engine(14)
+  pred_engine = Prediction_Engine()
 
   while True:
     if db.queue.count() > 0:
@@ -163,12 +181,15 @@ def deamon_loop():
       id_oldest_pred = get_oldest_pred_in_queue(db)
       
       if id_oldest_pred is not None:
-        # get the data of the oldest prediction
-        pred_data = get_pred_data(db, id_oldest_pred)
+        try:
+          # get the data of the oldest prediction
+          pred_data = get_pred_data(db, id_oldest_pred)
 
-        # run the prediction
-        #pred_result = pred_engine.predict(pred_data)
-        pred_result = pred_with_treatement(pred_engine, pred_data)
+          # run the prediction
+          #pred_result = pred_engine.predict(pred_data)
+          pred_result = pred_with_treatement(pred_engine, pred_data)
+        except:
+          pred_result = []
 
 
         # put the results in the database
@@ -185,4 +206,3 @@ def start_prediction_deamon():
     proc = multiprocessing.Process(target=deamon_loop, args=(), daemon=True)
     proc.start()
     print('# Prediction engine started with PID: ' + str(proc.pid))
-    print('Treatments targets simulated:', treatments_to_try)

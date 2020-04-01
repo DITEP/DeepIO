@@ -139,7 +139,7 @@ class History extends React.Component {
                   mode: 'lines',
                   line: {
                     dash: 'Solid',
-                    width: 2
+                    width: 3
                   }
                 }
                 plot_data.push(trace1)
@@ -150,6 +150,7 @@ class History extends React.Component {
                   type: 'scatter',
                   name: key,
                   mode: 'lines',
+                  opacity: 0.5,
                   line: {
                     dash: 'dot',
                     width: 2
