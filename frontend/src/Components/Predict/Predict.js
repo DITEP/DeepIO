@@ -32,7 +32,18 @@ class Predict extends React.Component {
       deleteError: false
     }
     this.onDrop = (files) => {
-      this.setState({file: files[0]});
+      var file = files[0]
+      console.log(file)
+
+      var new_name = `${file.name}_${+new Date()}`
+      var new_name = `${+new Date()}_${file.name}`
+
+      var renamed = new File([file], new_name, { type: file.type })
+      renamed.path = new_name
+
+      console.log(renamed)
+
+      this.setState({file: renamed});
       this.setState({
         dropzoneIsLocked:true,
         fileIsHidden: false 
@@ -81,7 +92,7 @@ class Predict extends React.Component {
     let file = this.state.file;
     const formData = new FormData();
     formData.append("file", file);
-    
+
     this.apiClient.uploadFile(formData).then((data) => {
       this.setState({
         dropzoneIsLocked: true,
@@ -114,12 +125,13 @@ class Predict extends React.Component {
       })
       return;
     }
-  
+
     this.setState({  
       uploading: true,
       noFileError: false,
       uploadError: false
     });
+
     var file = this.state.file;
     this.sendRequest()
   }
