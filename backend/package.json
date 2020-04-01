@@ -24,7 +24,7 @@
     "@turf/meta": "^6.0.2",
     "a-big-triangle": "^1.0.3",
     "abs-svg-path": "^0.1.1",
-    "acorn": "^5.7.3",
+    "acorn": "^5.7.4",
     "acorn-dynamic-import": "^4.0.0",
     "acorn-jsx": "^5.1.0",
     "add-line-numbers": "^1.0.1",
