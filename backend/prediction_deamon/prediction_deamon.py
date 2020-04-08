@@ -20,7 +20,7 @@ import json
 
 ACCEPTED_FILE_TYPES = ['npy', 'sf']
 
-df_normalization_value = pd.read_csv('./prediction_deamon/ML_models/normalization_value.csv', index_col=0)
+df_normalization_value = pd.read_csv('./prediction_deamon/ML_models/normalization_custom_loss.csv', index_col=0)
 TPM_MIN = df_normalization_value.loc['first_input_standardization']['x_min']
 TPM_MAX = df_normalization_value.loc['first_input_standardization']['x_max']
 
