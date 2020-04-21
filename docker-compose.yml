@@ -13,7 +13,7 @@ services:
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     volumes:
-      - uploads:/app/uploads
+      - ./app_memory/uploads:/app/uploads
     env_file:
       - .env
 
@@ -33,6 +33,7 @@ services:
       - ${MONGO_PORT}:${MONGO_PORT}
     volumes:
       - ./database/create_user.sh:/docker-entrypoint-initdb.d/create_user.sh:ro
+      - ./app_memory/mongo:/data/db
     env_file:
       - .env
 
@@ -46,10 +47,6 @@ services:
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     volumes:
-      - uploads:/app/public/uploads
+      - ./app_memory/uploads:/app/public/uploads
     env_file:
       - .env
-
-volumes:
-  uploads:
-
