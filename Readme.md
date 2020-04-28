@@ -43,6 +43,12 @@ To use the application, open your web browser and go to the following adress (re
 http://[DOMAIN]:[FRONTEND_PORT]
 ```
 
+### Data storage
+
+All the data gathered and created by the application are stored in the directory *DeepIO/app_memory* at the root of the application. The uploaded files and the MongoDB database will be stored in it.
+It means that you can use this folder to export your data or use data from another instance of the application.
+
+
 ## Troubleshoot
 
 ### Old CPUs compatibility (Illegal instruction / core dumped)
